@@ -1,0 +1,520 @@
+:root {
+    /**
+     * Colors
+     */
+  
+    --onyx:hsl(0, 0%, 25%);
+    --azure:hsl(219, 77%, 60%);
+    --white:hsl(0, 0%, 100%);
+    --platinum:hsl(0, 0%, 91%);
+    --gainsboro:hsl(0, 0%, 90%);
+    --red-salsa:hsl(0, 77%, 60%);
+    --dim-gray:hsl(0, 0%, 39%);
+    --davys-gray:hsl(0, 0%, 30%);
+    --spanish-gray:hsl(0, 0%, 62%);
+    --quick-silver:hsl(0, 0%, 64%);
+  
+    /**
+     * Typography
+     */
+  
+    --fs-28:28px;
+    --fs-24:24px;
+    --fs-18:18px;
+    --fs-15:15px;
+    --fs-14:14px;
+    --fw-5:500;
+    --fw-6:600;
+    --fw-7:700;
+  
+    /**
+     * Others 
+     */
+  
+    --px:60px;
+    --radius:5px;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  
+    &::before, &::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  }
+  @font-face {
+    font-family: JostRegular;
+    src: url(../fonts/Jost-Regular.ttf);
+}
+  html {
+    font-family: JostRegular;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  button {
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+  }
+  
+  ion-icon, span {
+    display: inline-block;
+  }
+  
+  label, img {
+    display: block;
+  }
+  
+  input {
+    font: inherit;
+    width: 100%;
+    border: none;
+  
+    &:focus {
+      outline: 2px solid var(--azure);
+    }
+  
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+      appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  
+  /**
+   * Remove number input up & down button
+   */
+  
+  /**
+   * Custom scrollbar style
+   */
+  
+//   ::-webkit-scrollbar {
+//     width: 8px;
+//   }
+  
+//   ::-webkit-scrollbar-track {
+//     background: transparent;
+//   }
+  
+//   ::-webkit-scrollbar-thumb {
+//     background: hsl(0, 0%, 80%);
+//     border-radius: 10px;
+  
+//     &:hover {
+//       background: hsl(0, 0%, 70%);
+//     }
+//   }
+  
+  /*-----------------------------------*\
+    #MAIN STYLE
+  \*-----------------------------------*/
+  
+  /**
+   * main container 
+   */
+  
+
+  
+  .heading {
+    font-size: var(--fs-28);
+    font-weight: var(--fw-6);
+    color: var(--onyx);
+    border-bottom: 1px solid var(--gainsboro);
+    padding: 20px var(--px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  
+    ion-icon {
+      font-size: 40px;
+    }
+  }
+  
+  .item-flex {
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  /**
+   * checkout section style 
+   */
+  
+  .checkout {
+    width: 70%;
+    padding: 40px var(--px);
+    background: var(--white);
+    border-right: 1px solid var(--gainsboro);
+  }
+  
+  .section-heading {
+    color: var(--onyx);
+    margin-bottom: 30px;
+    font-size: var(--fs-24);
+    font-weight: var(--fw-5);
+  }
+  
+  .payment-form {
+    margin-bottom: 40px;
+  }
+  
+  .payment-method {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+  
+    .method {
+      border: 1px solid var(--quick-silver);
+      border-radius: var(--radius);
+      width: 50%;
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      gap: 20px;
+      cursor: pointer;
+    }
+  
+    .selected {
+      border-color: var(--azure);
+    }
+  
+    .method {
+      ion-icon {
+        font-size: 20px;
+      }
+  
+      .checkmark {
+        margin-left: auto;
+        color: var(--quick-silver);
+      }
+  
+      .fill {
+        color: var(--azure);
+      }
+    }
+  }
+  
+  .label-default {
+    padding-left: 10px;
+    margin-bottom: 5px;
+    font-size: var(--fs-14);
+    color: var(--spanish-gray);
+  }
+  
+  .input-default {
+    background: var(--platinum);
+    border-radius: var(--radius);
+    color: var(--davys-gray);
+    &:focus{
+        outline: 2px rgb(155, 11, 30) solid!important;
+      outline-offset: 2px;
+    }
+  }
+  
+  .payment-form input {
+    padding: 10px 15px;
+    font-size: var(--fs-18);
+    font-weight: var(--fw-5);
+  }
+  
+  .cardholder-name {
+    margin-bottom: 20px;
+  }
+  
+  .card-number {
+    margin-bottom: 20px;
+  
+    input {
+      letter-spacing: 3px;
+    }
+  }
+  
+  .cvv input {
+    letter-spacing: 3px;
+  }
+  
+  .input-flex {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  
+    .expire-date, .cvv {
+      width: 50%;
+    }
+  }
+  
+  .expire-date .input-flex {
+    color: var(--spanish-gray);
+    gap: 13px;
+  
+    input {
+      text-align: center;
+    }
+  }
+  
+  .btn {
+    border-radius: var(--radius);
+  
+    &:active {
+      transform: scale(0.99);
+    }
+  
+    &:focus {
+      color: var(--white);
+      background: rgb(155, 11, 30)!important;
+      outline: 2px solid rgb(155, 11, 30)!important;
+      outline-offset: 2px;
+      outline: 2px solid rgb(155, 11, 30)!important;
+    }
+  }
+  
+  .btn-primary {
+    background: rgb(155, 11, 30)!important;
+    font-weight: var(--fw-5);
+    color: var(--white);
+    padding: 13px 45px;
+  
+    b {
+      margin-right: 10px;
+    }
+  }
+  
+  /**
+   * cart section style
+   */
+  
+  .cart {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  .cart-item-box {
+    padding: 40px var(--px);
+    margin-bottom: auto;
+  }
+  
+  .product-card {
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  
+    .card {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+  }
+  
+  .card {
+    .product-img {
+      border-radius: var(--radius);
+    }
+  
+    .detail {
+      .product-name {
+        font-weight: var(--fw-6);
+        font-size: var(--fs-15);
+        color: var(--dim-gray);
+        margin-bottom: 10px;
+      }
+  
+      .wrapper {
+        display: flex;
+        gap: 20px;
+      }
+    }
+  }
+  
+  .product-qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    button {
+      background: var(--platinum);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+  
+  .product-close-btn:active ion-icon {
+    transform: scale(0.95);
+  }
+  
+  .product-qty button ion-icon {
+    --ionicon-stroke-width:60px;
+    font-size: 10px;
+  }
+  
+  .product-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  
+    ion-icon {
+      font-size: 25px;
+      color: var(--quick-silver);
+    }
+  
+    &:hover ion-icon {
+      color: var(--red-salsa);
+    }
+  }
+  
+  .discount-token {
+    padding: 40px var(--px);
+    border-top: 1px solid var(--gainsboro);
+    border-bottom: 1px solid var(--gainsboro);
+  }
+  
+  .wrapper-flex {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  
+    input {
+      padding: 12px 15px;
+      font-weight: var(--fw-6);
+      letter-spacing: 2px;
+    }
+  }
+  
+  .btn-outline {
+    padding: 10px 25px;
+    border: 1px solid rgb(155, 11, 30)!important;
+    color: var(--azure);
+  
+    &:hover {
+      background: rgb(155, 11, 30);
+      color: var(--white);
+    }
+  }
+  
+  .amount {
+    padding: 40px var(--px);
+  
+    > div {
+      display: flex;
+      justify-content: space-between;
+  
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+  
+    .total {
+      font-size: var(--fs-18);
+      font-weight: var(--fw-7);
+      color: var(--onyx);
+    }
+  }
+  
+  /*-----------------------------------*\
+    #RESPONSIVE
+  \*-----------------------------------*/
+  
+  @media (max-width: 1200px) {
+    .item-flex {
+      flex-direction: column-reverse;
+    }
+  
+    /**
+     * checkout section responsive 
+     */
+  
+    .checkout {
+      width: 100%;
+      border-right: none;
+    }
+  
+    .btn-primary {
+      width: 100%;
+    }
+  
+    /**
+     * cart section responsive
+     */
+  
+    .cart {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      border-bottom: 1px solid var(--gainsboro);
+  
+      .wrapper {
+        margin-top: auto;
+      }
+  
+      .cart-item-box {
+        border-right: 1px solid var(--gainsboro);
+        margin-bottom: 0;
+      }
+    }
+  
+    .discount-token {
+      border-top: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    :root {
+      --px:40px;
+    }
+  
+    .cart {
+      grid-template-columns: 1fr;
+    }
+  
+    .discount-token {
+      border-top: 1px solid var(--gainsboro);
+    }
+  
+    .wrapper-flex {
+      gap: 20px;
+    }
+  }
+  
+  @media (max-width: 567px) {
+    :root {
+      --px:20px;
+    }
+  
+    .payment-method, .input-flex {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .payment-method .method {
+      width: 100%;
+    }
+  
+    .input-flex {
+      .expire-date, .cvv {
+        width: 100%;
+      }
+    }
+  
+    .expire-date .input-flex {
+      flex-direction: row;
+    }
+  }
+//CheckoutEnd

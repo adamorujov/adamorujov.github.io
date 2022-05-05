@@ -1,0 +1,519 @@
+{% extends 'base.html' %}
+{% block description %}
+<meta name="description" content="">
+{% endblock %}
+{% block keywords %}
+<meta name="keywords" content="">
+{% endblock %}
+{% block title %} Gecko Home {% endblock %}
+{% load static %}
+
+{% load star_range %}
+
+{% block main %}
+<!-- Header start -->
+{% include 'components/header.html' %}
+<!-- Header end -->
+<main>
+    <section id="details">
+        <div class="container">
+            <div class="row">
+                <div class="images col-lg-6 col-md-6">
+                    <div class="row detailsRowBigImage">
+                        <div class="bigImage">
+                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/4_a00b8fb0-5dd2-4ea8-8f3d-d458b9f72a18_720x.jpg?v=1605081140"
+                                alt="">
+                        </div>
+                    </div>
+                    <div class="row detailsRowSmallImage">
+                        <div class="smallImages">
+                            <div class="image"><img
+                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/4_a00b8fb0-5dd2-4ea8-8f3d-d458b9f72a18_720x.jpg?v=1605081140"
+                                    alt=""></div>
+                            <div class="image"><img
+                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/8_bba25afa-c02d-44d0-9929-5f7297260795_720x.jpg?v=1605081140"
+                                    alt=""></div>
+                            <div class="image"><img
+                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/11_a90c335a-b212-4f3d-87e6-06c7efff31f7_720x.jpg?v=1605081140"
+                                    alt=""></div>
+                            <div class="image"><img
+                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_5cba8588-668f-4f83-9b4d-820fff2cb58f_720x.jpg?v=1605081140"
+                                    alt=""></div>
+                                    
+                        </div>
+                    </div>
+                </div>
+                <div class="info col-lg-6 col-md-6">
+                    <div class="row titleRow">
+                        <div class="title">
+                            <span>{{ product.name }}</span>
+                        </div>
+                    </div>
+                    <div class="row priceRow">
+                        <ul>
+                            <li><span class="price">${{ product.price }}</span>
+                            </li>
+                            {% if product.in_stock %}
+                            <li><span class="in-outStock">In Stock</span></li>
+                            {% else %}
+                            <li><span class="in-outStock">Out of Stock</span></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="row reviewRow">
+                        <span class="reviews">
+                            <span class="reviewIcons">
+                                {% for i in starpoint_int %}
+                                <span class="fa-solid fa-star"></span>
+                                {% endfor %}
+                                {% if has_rest %}
+                                <span class="fa-solid fa-star-half-stroke"></span>
+                                {% endif %}
+                                {% for i in starpoint_rest %}
+                                <span class="fa-regular fa-star"></span>
+                                {% endfor %}
+                            </span>
+                            {% if comments %}
+                            <span class="reviewText">({{ comments | length }})</span>
+                            {% else %}
+                            <span class="reviewText">No reviews</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="row descRow">
+                        <p>{{ product.description | truncatewords:45 }}</p>
+                    </div>
+                    <div class="row colorRow">
+                        <p class="colorVal">COLOR: <span></span></p>
+                        <ul class="color">
+                            {% for color in product.colors.all %}
+                            <li class="colorLi" data-value="{{ color.name }}"><a
+                                    style="background-color: #{{ color.code }};" href=""></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="row sizeRow">
+                        <p class="sizeVal">SIZE: <span></span></p>
+                        <ul class="size">
+                            {% for size in product.sizes.all %}
+                            <li class="sizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="row addToCardRow">
+                        <div class="counter col-lg-2 col-md-3 col-sm-6 col-xs-2">
+                            <button class="minus"><i class="fa-solid fa-minus"></i></button>
+                            <input id="productCounter" value="1" type="text">
+                            <button class="plus"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <div class="whishList col-lg-2 col-md-3 col-sm-6 col-xs-2">
+                            <a href="">
+                                {% if not wishlisted %}
+                                <i class="bi bi-heart whishListIcon"></i>
+                                {% else %}
+                                <i class="bi-heart-fill whishListBackground"></i>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <button class="addCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                            ADD TO CARD
+                        </button>
+                    </div>
+                    <div class="row categoryRow">
+                        <span class="name">Brand:<span class="content">{{ product.shop.name }}</span></span>
+                        <span class="name">Category:<span class="content">{% for category in product.categories.all %}{{ category.name }} {% endfor %}</span></span>
+                        <span class="name">Gender:<span class="content">{{ product.gender }}</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="description">
+        <div class="container">
+            <div class="row descRow">
+                <ul>
+                    <li class="descriptionName">
+                        <span class="tabName tabActive" data-id="descriptionTab">Description</span>
+                    </li>
+                    <li class="comments">
+                        <span class="tabName" data-id="commentsTab">Comments</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row descContentRow tab" id="descriptionTab">
+                <div class="descContent">
+                    <span>DESCRIPTION</span>
+                    <p>
+                        {{ product.description }}
+                    </p>
+                </div>
+                <div class="row descImage">
+                    <img class="col-lg-4 col-md-12"
+                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-2_540x.jpg?v=1581901925"
+                        alt="">
+                    <img class="col-lg-4  col-md-12"
+                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-3_540x.jpg?v=1581901925"
+                        alt="">
+                    <img class="col-lg-4  col-md-12"
+                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-4_540x.jpg?v=1581901925"
+                        alt="">
+                </div>
+            </div>
+            <div class="row detailsTitleRow tab d-none" id="commentsTab">
+                <span class="customerReviewText">Customer Comments</span>
+                <div class="title">
+                    <div class="star-review">
+                        {% if not comments %}
+                        <span class="noReview">
+                            No comments yet.
+                        </span>
+                        {% else %}
+                        <span class="starIcons">
+                            {% for i in starpoint_int %}
+                            <span class="fa-solid fa-star"></span>
+                            {% endfor %}
+                            {% if has_rest %}
+                            <span class="fa-solid fa-star-half-stroke"></span>
+                            {% endif %}
+                            {% for i in starpoint_rest %}
+                            <span class="fa-regular fa-star"></span>
+                            {% endfor %}
+                        </span>
+                        <span class="basedOn">
+                            Based on {{ comments | length }} comment
+                        </span>
+                        {% endif %}
+                    </div>
+                    <a href="#" id="writeComment">Write a comment</a>
+                </div>
+                <div class="row writeCommentRow">
+                    <hr>
+                    <p class="writeCmmnt">
+                        Write a comment
+                    </p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <label class="nameLbl" for="name">Name</label><br>
+                        <input class="name-mail" type="text" name="name" id="name" placeholder="Enter your name"><br><br>
+                        <label class="mailLbl" for="mail">Email</label><br>
+                        <input class="name-mail" type="email" name="email" id="mail" placeholder="jamalaz@code.edu.az"><br><br>
+                        <label class="rating">
+                            Rating
+                        </label><br>
+                        <div class="starRating">
+                            <input name="star" class="" value="1" data-value="1" type="radio" id="rating1">
+                            <label for="rating1" class="fa-regular fa-star myStar"></label>
+                            <input name="star" value="2" data-value="2" type="radio" id="rating2">
+                            <label for="rating2" class="fa-regular fa-star myStar"></label>
+                            <input name="star" value="3" data-value="3" type="radio" id="rating3">
+                            <label for="rating3" class="fa-regular fa-star myStar"></label>
+                            <input name="star" value="4" data-value="4" type="radio" id="rating4">
+                            <label for="rating4" class="fa-regular fa-star myStar"></label>
+                            <input name="star" value="5" data-value="5" type="radio" id="rating5">
+                            <label for="rating5" class="fa-regular fa-star myStar"></label>
+                        </div>
+                        <label class="txtAreaLbl" for="comment">Body of comment</label><br>
+                        <textarea class="txtArea" name="comment" id="comment" cols="150" rows="8"
+                            placeholder="Write your comment here"></textarea>
+                        <button class="commentFormSubmit" type="submit">Submit Comment</button>
+                    </form>
+                </div>
+                <div class="row commentsRow">
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <hr>
+                        <div class="commentIcons">
+                            {% for i in comment.rating|starrange %}
+                            <i class="fa-solid fa-star"></i>
+                            {% endfor %}
+                            {% for i in comment.rating|emptystarnumber|starrange %}
+                            <i class="fa-regular fa-star"></i>
+                            {% endfor %}
+                        </div>
+                        <div class="name-date">
+                            <span>
+                                <span class="name">{{ comment.name }}</span> on <span class="date">{{ comment.pub_date|date:"M d, Y" }}</span>
+                            </span>
+                        </div>
+                        <div class="commentContent">
+                            <p>
+                                {{ comment.comment }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="relatedProducts">
+        <div class="container">
+            <div class="row">
+                <span class="relatedTitle">You may also like</span>
+            </div>
+            <div class="row">
+                <div class="related owl-carousel owl-theme">
+                    {% for product in also_like_products %}
+                    <div class="smallImage">
+                        <div class="image">
+                            <a class="mainImage" href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                    alt="">
+                                <div class="icons">
+                                    <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
+                                    <a href="" class="view"><i class="bi bi-eye"></i></a>
+                                </div>
+
+                            </a>
+                            <a class="secondImage" href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                    alt="">
+                            </a>
+                            <div class="addToCard">
+                                            
+                                <a class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            </div>
+                        </div>
+                        <div class="name-price">
+                            <div class="name"><a href="">{{ product.name }}</a></div>
+                            <div class="price">£{{ product.price }}</div>
+                        </div>
+                        <div class="bg-modal d-none">
+                            <div class="productModal animate__animated d-none">
+                                <div class="image-name-price">
+                                    <div class="modalImage">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    </div>
+                                    <div class="modalname-price">
+                                        <div class="modalName">
+                                            <a href="">{{ product.name }}</a>
+                                        </div>
+                                        <div class="modalPrice">
+                                            ${{ product.price }}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="modalcolor-text">
+                                    <div class="modalText">
+                                        <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                    </div>
+                                    <div class="modalColor">
+                                        <ul class="modalColorUl">
+                                            {% for color in product.colors.all %}
+                                            <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                    style="background-color: #{{ color.code }};" href=""></a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="modalsize-text">
+                                    <div class="modalText">
+                                        <span class="modalSizeVal">Size: <span>40</span> </span>
+                                    </div>
+                                    <div class="modalSize">
+                                        <ul class="modalSizeUl">
+                                            {% for size in product.sizes.all %}
+                                            <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="modalcounter-button">
+                                    <div class="modalCounter">
+                                        <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                        <span class="modalProductCounter" >1</span>
+                                        <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                    <div class="modalButton">
+                                        <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                            ADD TO CARD
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modalViewFullDetails">
+                                    <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                </div>
+                                <div class="modalClose">
+                                    <i class="las la-times"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <span>No related products.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="recentlyViewed">
+        <div class="container">
+            <div class="row">
+                <span class="recentlyTitle">Recently Viewed</span>
+            </div>
+            <div class="row">
+                <div class="recently owl-carousel owl-theme">
+                    {% for product in recently_viewed_products %}
+                    <div class="smallImage">
+                        <div class="image">
+                            <a class="mainImage" href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                    alt="">
+                                <div class="icons">
+                                    <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
+                                    <a href="" class="view"><i class="bi bi-eye"></i></a>
+                                </div>
+
+                            </a>
+                            <a class="secondImage" href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                    alt="">
+                            </a>
+                            <div class="addToCard">
+                                            
+                                <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            </div>
+                        </div>
+                        <div class="name-price">
+                            <div class="name"><a href="">{{ product.product.name }}</a></div>
+                            <div class="price">£{{ product.product.price }}</div>
+                        </div>
+                        <div class="bg-modal d-none">
+                            <div class="productModal animate__animated d-none">
+                                <div class="image-name-price">
+                                    <div class="modalImage">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    </div>
+                                    <div class="modalname-price">
+                                        <div class="modalName">
+                                            <a href="">{{ product.product.name }}</a>
+                                        </div>
+                                        <div class="modalPrice">
+                                            ${{ product.product.price }}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="modalcolor-text">
+                                    <div class="modalText">
+                                        <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                    </div>
+                                    <div class="modalColor">
+                                        <ul class="modalColorUl">
+                                            {% for color in product.product.colors.all %}
+                                            <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                    style="background-color: #{{ color.code }};" href=""></a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="modalsize-text">
+                                    <div class="modalText">
+                                        <span class="modalSizeVal">Size: <span>40</span> </span>
+                                    </div>
+                                    <div class="modalSize">
+                                        <ul class="modalSizeUl">
+                                            {% for size in product.product.sizes.all %}
+                                            <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="modalcounter-button">
+                                    <div class="modalCounter">
+                                        <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                        <span class="modalProductCounter" >1</span>
+                                        <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                    <div class="modalButton">
+                                        <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                            ADD TO CARD
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modalViewFullDetails">
+                                    <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                </div>
+                                <div class="modalClose">
+                                    <i class="las la-times"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/zoomsl.js' %}"></script>
+<script src="{% static 'js/details.js' %}"></script>
+<script src="{% static 'homeowlcarousel/owl.carousel.min.js' %}"></script>
+
+<script>
+    $("#searchinput").on('input', function(){
+      $.ajax({
+            type : 'GET',
+            data : {
+                q: $("#searchinput").val(),
+            },
+            //url: "", 
+            success: function(data){
+                var resultText = "";
+                if (data.length == 0){
+                    resultText = "Not found product for your query.";
+                }
+                else{
+                    for (var i=0; i<data.length; i++){
+                        resultText = resultText + `
+                            <div class="serachResult">
+                                <div class="image">
+                                    <a href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    </a>
+                                </div>
+                                <div class="name-price">
+                                    <div class="name">
+                                        <a href="">${data[i].name}</a>
+                                    </div>
+                                    <div class="price">
+                                        <span>
+                                            $${data[i].price}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html(`<a href="" class="viewAll">
+                                            View all(${data.length})
+                                            <i class="fa-solid fa-arrow-right-long"></i>
+                                        </a>`
+                                    );
+                }
+                else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html("");
+                }
+                else{
+                    $("#searchresultarea").html("");
+                    $("#viewall").html("");
+                }
+            },
+            error: function(res){
+                $("searchresultarea").text(res);
+
+            },
+        });
+    });
+</script>
+{% endblock %}
+

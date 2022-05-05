@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block description %}
+<meta name="description" content="">
+{% endblock %}
+{% block keywords %}
+<meta name="keywords" content="">
+{% endblock %}
+{% block title %} Login {% endblock %}
+{% load static %}
+
+{% block main %}
+<!-- Header start -->
+{% include 'components/header.html' %}
+<!-- Header end -->
+<main> 
+    <section id="loginSection">
+        <div class="container">
+            <div class="row loginRow">
+                <div id="loginPage">
+                    <div class="loginForm">
+                        <div class="loginTxt-closeIcon">
+                            <span class="loginTxt">LOGIN</span>
+                        </div>
+                        <div class="loginInputArea">
+                            <form action="post">
+                                <label for="mail">Email <span>*</span></label><br>
+                                <input id="mail" type="email" autocomplete="off"><br><br>
+                                <label for="pw">Password <span>*</span></label><br>
+                                <input id="pw" type="password" autocomplete="off"><br><br>
+                                <button type="submit">SIGN IN</button>
+                            </form>
+                        </div>
+                        <p class="log-regP">New customer? <a class="goRegister" href="">Create your account</a></p>
+                        <p class="log-regP">Forgot password? <a class="goRecoverPassword" href="">Recover password</a></p>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </section> 
+</main>
+
+{% endblock %}

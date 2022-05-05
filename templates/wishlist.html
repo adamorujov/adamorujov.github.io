@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block description %}
+<meta name="description" content="">
+{% endblock %}
+{% block keywords %}
+<meta name="keywords" content="">
+{% endblock %}
+{% block title %} Products {% endblock %}
+{% load static %}
+
+{% block main %}
+<!-- Header start -->
+{% include 'components/header.html' %}
+<!-- Header end -->
+<main>
+    <section id="whishlistEntrance">
+        <div class="row whishlistRow">
+            <div class="whishlistTxt">
+                <span>
+                    View your wishlist products
+                </span>
+            </div>
+        </div>
+    </section>
+    {% if wishlistitems %}
+    <section id="products">
+        <div class="container">
+            <div class="row">
+                {% for wishlistitem in wishlistitems %}
+                <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="image">
+                        <a class="mainImage" href="">
+                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                alt="">
+                            <div class="icons">
+                                <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
+                                <a href="" class="view"><i class="bi bi-eye"></i></a>
+                            </div>
+
+                        </a>
+                        <a class="secondImage" href="">
+                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                alt="">
+                        </a>
+                        <div class="addToCard">
+                                            
+                            <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                        </div>
+                    </div>
+                    <div class="name-price">
+                        <div class="name"><a href="">{{ wishlistitem.product.name }}</a></div>
+                        <div class="price">£{{ wishlistitem.product.price }}</div>
+                    </div>
+                    <div class="bg-modal d-none">
+                        <div class="productModal animate__animated d-none">
+                            <div class="image-name-price">
+                                <div class="modalImage">
+                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                </div>
+                                <div class="modalname-price">
+                                    <div class="modalName">
+                                        <a href="">{{ wishlistitem.product.name }}</a>
+                                    </div>
+                                    <div class="modalPrice">
+                                        ${{ wishlistitem.product.price }}
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modalcolor-text">
+                                <div class="modalText">
+                                    <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                </div>
+                                <div class="modalColor">
+                                    <ul class="modalColorUl">
+                                        {% for color in wishlistitem.product.colors.all %}
+                                        <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                style="background-color: #{{ color.code }};" href=""></a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modalsize-text">
+                                <div class="modalText">
+                                    <span class="modalSizeVal">Size: <span>40</span> </span>
+                                </div>
+                                <div class="modalSize">
+                                    <ul class="modalSizeUl">
+                                        {% for size in wishlistitem.product.sizes.all %}
+                                        <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modalcounter-button">
+                                <div class="modalCounter">
+                                    <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                    <span class="modalProductCounter" >1</span>
+                                    <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                                <div class="modalButton">
+                                    <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                        ADD TO CARD
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modalViewFullDetails">
+                                <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                            </div>
+                            <div class="modalClose">
+                                <i class="las la-times"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% else %}
+    <section id="whishlistEmpty">
+        <div class="container whishlistContainer">
+            <div class="row whishListEmptyRow">
+                <div class="whishlistInfo">
+                    <p class="whishlistHeartIcon">
+                        <i class="bi bi-heart"></i>
+                    </p>
+                    <p class="whishlistStatus">
+                        WHISHLIST IS EMPTY
+                    </p>
+                    <p class="whishlistDesc">
+                        You don't have any products in the wishlist yet. <br>
+                        You will find a lot of interesting products on our "Shop" page.
+                    </p>
+                    <div class="returnToShop">
+                    <a class="returnToShopBtn" href="">RETURN TO SHOP</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

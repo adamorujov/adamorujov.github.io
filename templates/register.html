@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block description %}
+<meta name="description" content="">
+{% endblock %}
+{% block keywords %}
+<meta name="keywords" content="">
+{% endblock %}
+{% block title %} Products {% endblock %}
+{% load static %}
+
+{% block main %}
+<!-- Header start -->
+{% include 'components/header.html' %}
+<!-- Header end -->
+<main>
+    <section id="registerSection">
+        <div class="container">
+            <div class="row registerRow">
+                <div id="registerPage">
+                    <div class="registerForm">
+                        <div class="registerTxt-closeIcon">
+                            <span class="registerTxt">REGISTER</span>
+                        </div>
+                        <div class="registerInputArea">
+                            <form id="registerTypeForm" action="post">
+                                <label for="regname">Name <span>*</span></label><br>
+                                <input type="text" id="regname"><br><br>
+                                <label for="regsurname">Surname <span>*</span></label><br>
+                                <input type="text" id="regsurname"><br><br>
+                                <label for="regsurname">Username <span>*</span></label><br>
+                                <input type="text" id="regsurname"><br><br>
+                                <label for="regmail">Email <span>*</span></label><br>
+                                <input id="regmail" type="email" ><br><br>
+                                <label for="regmail">Telephone number <span>*</span></label><br>
+                                <input id="regmail" type="email" ><br><br>
+                                <label for="regmail">Age<span>*</span></label><br>
+                                <input id="regmail" type="email" ><br><br>
+                                <label for="regpw">Password <span>*</span></label><br>
+                                <input id="regpw" type="password"><br><br>
+                                <label for="regpw">Confirm password <span>*</span></label><br>
+                                <input id="regpw" type="password"><br><br>
+                                <button type="submit">REGISTER</button>
+                            </form>
+                        </div>
+                        <p class="logP">Already have an account? <a class="goLogin" href="">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

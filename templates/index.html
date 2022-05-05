@@ -1,0 +1,884 @@
+{% extends 'base.html' %}
+{% block description %}
+<meta name="description" content="">
+{% endblock %}
+{% block keywords %}
+<meta name="keywords" content="">
+{% endblock %}
+{% block title %} Gecko Home {% endblock %}
+{% load static %}
+
+{% block main %}
+
+<!-- Header start -->
+
+<header id="homeNavBar" class="generalNavBar stickyNavBar">
+    <nav>
+        <div class="row">
+            <div class="menu animate__animated">
+                <div class="menuTxt-closeIcon">
+                    <span class="menuTxt">MENU</span>
+                    <span class="closeIcon"><i class="las la-times"></i></span>
+                </div>
+                <ul class="menuLinks">
+                    <li><a href="">Home</a></li>
+                    <li class="menuShopLi"><a href="">Shop</a>
+                        <ul class="menuShopUl">
+                            {% for shop in shops %}
+                            <li><a href="">{{ shop.name }}</a></li>
+                            {% empty %}
+                            Empty
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="menuProductsLi"><a href="">Products</a>
+                        <ul class="menuProductsUl">
+                            {% for category in categories %}
+                            <li><a href="">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li><a href="">Man</a></li>
+                    <li><a href="">Woman</a></li>
+                    <li><a href="">Kid</a></li>
+                    <li><a href="">Contact</a></li>
+                    <li><a href="#" class="searchIcon">
+                            <i class="bi bi-search nav-search"></i>
+                            <span>Search</span>
+                        </a>
+                    </li>
+                    <li><a class="userIcon" href="#">
+                            <i class="bi bi-person nav-user"></i>
+                            <span>Login/Register</span>
+                        </a>
+                    </li>
+                    <li><a href="#" class="wishlist">
+                            <i class="bi bi-heart nav-wishlist"></i>
+                            <span>Whishlist</span>
+                        </a>
+                    </li>
+                    <li><a href="#" class="basket">
+                            <i class="bi bi-cart2 nav-basket"></i>
+                            <span>Basket</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="links-logo-icons">
+                <div class="nav-links col-lg-5  col-md-1 col-sm-2 col-xs-4">
+                    <i class="fa-solid fa-bars menuIcon mx-2"></i>
+                    <ul class="navLinkElements">
+                        <li><a href="">Home</a></li>
+                        <li class="shopLi"><a href="">Shop</a>
+                            <div class="shop">
+                                <ul class="shopElements">
+                                    {% for shop in shops %}
+                                    <li><a href="">{{ shop.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="productsLi"><a href="">Products</a>
+                            <div class="products">
+                                <ul class="productElements">
+                                    {% for category in categories %}
+                                    <li><a href="">All products</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="">Man</a></li>
+                        <li><a href="">Woman</a></li>
+                        <li><a href="">Kid</a></li>
+                        <li><a href="">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="logo col-lg-3 col-md-7 col-sm-5 col-xs-12">
+                    <a href="">
+                        <img src="../static/images/Logo-img_38c63be0-fb31-4328-b860-cedd88ea4232_225x.webp"
+                            alt="logo">
+                    </a>
+                </div>
+                <div class="icons col-lg-4  col-md-4 col-sm-5 col-xs-6">
+                    <a class="searchIcon" href="#">
+                        <i class="bi bi-search nav-search"></i>
+                    </a>
+                    <a class="userIcon" href="#">
+                        <i class="bi bi-person nav-user"></i>
+                    </a>
+                    <a href="#" class="wishlist">
+                        <i class="bi bi-heart nav-wishlist"></i>
+                        <span class="wishlistCount" id="wishlistcount">{{ wishlist_number }}</span>
+                    </a>
+                    <a href="#" class="basket">
+                        <i class="bi bi-cart2 nav-basket"></i>
+                        <span class="basketCount" id="basketcount">{{ orderitems | length }}</span>
+                    </a>
+                </div>
+            </div>
+            <div class="searchArea animate__animated">
+                <div class="searchTxt-closeIcon">
+                    <span class="searchTxt">SEARCH OUR SITE</span>
+                    <span class="searchCloseIcon"><i class="las la-times"></i></span>
+                </div>
+                <div class="searchInputArea">
+                    <form action="post">
+                        <input class="searchInput" id="searchinput" type="search" autocomplete="off" placeholder="Search for products">
+                    </form>
+                </div>
+                <div class="searchResultArea" id="searchresultarea"></div>
+                <div id="viewall"></div>
+            </div>
+            <div class="basketArea animate__animated">
+                <div class="basketTxt-closeIcon">
+                    <span class="basketTxt">SHOPPING CART</span>
+                    <span class="basketCloseIcon"><i class="las la-times"></i></span>
+                </div>
+                {% if not orderitems %}
+                <div class="emptyBasket" id="emptybasket">
+                    <div class="emptybasketIcon">
+                        <i class="bi bi-cart-x"></i>
+                    </div>
+                    <p>Your basket is empty</p>
+                    <div class="returnBtn">
+                        <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="basketProductsArea" id="basketproductsarea">
+                    <div class="products" id="products">
+                        {% for orderitem in orderitems %}
+                        <div class="basketProduct">
+                            <div class="basketProductImage">
+                                <a href="">
+                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                                </a>
+                            </div>
+                            <div class="basketContent">
+                                <div class="d-none">{{ orderitem.id }}</div>
+                                <div class="productName">
+                                    <a href="">
+                                        {{ orderitem.product.name }} (<span>{{ orderitem.size }}/{{ orderitem.color }}</span>) x {{ orderitem.quantity }}
+                                    </a>
+                                </div>
+                                <span class="productPrice">
+                                    ${{ orderitem.product.price }}
+                                </span>
+                                <div class="removeItem">
+                                    <span class="removingItem"><i class="bi bi-trash"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="subtotal">
+                        <div class="title">
+                            <span class="subtotalTitle">Subtotal</span>
+                            <span class="subtotalPrice">$<span id="subtotalprice">{{ order.get_subtotal }}</span></span>
+                        </div>
+                        <div class="desc">
+                            <p>Taxes, shipping and discounts codes calculated at checkout</p>
+                        </div>
+                        <div class="checkoutBtn">
+                            <a class="mycheckoutBtn" href="">
+                                CHECK OUT
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!--  Header end  -->
+
+<main>
+    <section class="owl-carousel owl-theme myOwl">
+        {% for banner in banners %}
+        <div class="image-text">
+            <div class="image">
+                <img src="{{ banner.image.url }}"
+                    alt="{{ banner.title }}">
+            </div>
+            <div class="textDiv">
+                <div class="text">
+                    <div class="discount">
+                        <p>
+                            {{ banner.description }}
+                        </p>
+                    </div>
+                    <div class="title">
+                        <p>{{ banner.title }}</p>
+                    </div>
+                    <div class="mybtnDiv">
+                        <a class="myButton" href="{{ banner.link }}">
+                            {{ banner.link_name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    <section id="handpickedItems">
+        <div class="container">
+            <div class="row handpickedRow">
+                <div class="itemsTitle">
+                    <div class="row bestSellerTitleRow">
+                        <div class="title">
+                            <div class="itemsText">
+                                <p>Best Seller Items</p>
+                            </div>
+                            <div class="allproductsText">
+                                <a href="">
+                                    VIEW ALL PRODUCTS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row imagesRow">
+                        <div class="row bigImageRow col-lg-6 col-md-12 col-sm-12">
+                            <div class="bigImage">
+                                <div
+                                    class="image">
+                                    <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Product-Banner-1_720x.jpg?v=1604995599">
+                                </div>
+                                <div class="content">
+                                    <div class="discount">{{ settings.first_field_description }}</div>
+                                    <div class="saleStatus">{{ settings.first_field_title }}</div>
+                                    <a class="goToProducts" href="">{{ settings.first_field_link_name }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row smallImageRow col-lg-6 col-md-12 col-sm-12 justify-content-center">
+                            {% for product in bestseller_products %}
+                            <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="image">
+                                    <div class="d-none">{{ product.id }}</div>
+                                    <a class="mainImage" href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                            alt="{{ product.name }}">
+                                        <div class="icons">
+                                            <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                        </div>
+
+                                    </a>
+                                    <a class="secondImage" href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                            alt="">
+                                    </a>
+                                    <div class="addToCard">
+                                            
+                                        <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                    </div>
+                                </div>
+                                <div class="name-price">
+                                    <div class="name"><a href="">{{ product.name }}</a></div>
+                                    <div class="price">${{ product.price }}</div>
+                                </div>
+                                <div class="bg-modal d-none">
+                                    <div class="productModal animate__animated d-none">
+                                        <div class="image-name-price">
+                                            <div class="modalImage">
+                                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                            </div>
+                                            <div class="modalname-price">
+                                                <div class="modalName d-none">
+                                                    <a href="">{{ product.id }}</a>
+                                                </div>
+                                                <div class="modalName">
+                                                    <a href="">{{ product.name }}</a>
+                                                </div>
+                                                <div class="modalPrice">
+                                                    ${{ product.price }}
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="modalcolor-text">
+                                            <div class="modalText">
+                                                <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                            </div>
+                                            <div class="modalColor">
+                                                <ul class="modalColorUl">
+                                                    {% for color in product.colors.all %}
+                                                    <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                            style="background-color: #{{ color.code }};" href=""></a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="modalsize-text">
+                                            <div class="modalText">
+                                                <span class="modalSizeVal">Size: <span>40</span> </span>
+                                            </div>
+                                            <div class="modalSize">
+                                                <ul class="modalSizeUl">
+                                                    {% for size in product.sizes.all %}
+                                                    <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="modalcounter-button">
+                                            <div class="modalCounter">
+                                                <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                                <span class="modalProductCounter" >1</span>
+                                                <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                            </div>
+                                            <div class="modalButton">
+                                                <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12" id="modaladdtocard-{{ product.id }}">
+                                                    ADD TO CARD
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modalViewFullDetails">
+                                            <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                        </div>
+                                        <div class="modalClose">
+                                            <i class="las la-times"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="newArrival">
+        <div class="row">
+            <div class="image-content">
+                <div
+                    class="image"><a href="">
+                        <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Sub-Banner_0bbcd124-38e5-4d3e-b1dc-27f636a375cf_1950x.jpg?v=1604993439"></a>
+                </div>
+                <div class="content">
+                    <div class="collectionNo">
+                        <p>{{ settings.trending_description }}</p>
+                    </div>
+                    <div class="arrivalStatus">
+                        <p>{{ settings.trending_title }}</p>
+                    </div>
+                    <a class="collection" href="">{{ settings.trending_link_name }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% if featured_products %}
+    <section id="featuredProducts">
+        <div class="container">
+            <div class="row">
+                <div class="content-products">
+                    <div class="title">
+                        <p>Featured Products</p>
+                    </div>
+                    <div class="seeAllProducts">
+                        <a href="">VIEW ALL PRODUCTS</a>
+                    </div>
+                </div>
+                <div class="slider">
+                    <div class="featured owl-carousel owl-theme">
+                        {% for product in featured_products %}
+                        <div class="smallImage">
+                            <div class="image">
+                                <div class="d-none">{{ product.id }}</div>
+                                <a class="mainImage" href="">
+                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                        alt="{{ product.name }}">
+                                    <div class="icons">
+                                        <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                    </div>
+
+                                </a>
+                                <a class="secondImage" href="">
+                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                        alt="">
+                                </a>
+                                <div class="addToCard">
+                                            
+                                    <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                </div>
+                            </div>
+                            <div class="name-price">
+                                <div class="name"><a href="">{{ product.name }}</a></div>
+                                <div class="price">£{{ product.price }}</div>
+                            </div>
+                            <div class="bg-modal d-none">
+                                <div class="productModal animate__animated d-none">
+                                    <div class="image-name-price">
+                                        <div class="modalImage">
+                                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                        </div>
+                                        <div class="modalname-price">
+                                            <div class="modalName d-none">
+                                                <a href="">{{ product.id }}</a>
+                                            </div>
+                                            <div class="modalName">
+                                                <a href="">{{ product.name }}</a>
+                                            </div>
+                                            <div class="modalPrice">
+                                                ${{ product.price }}
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="modalcolor-text">
+                                        <div class="modalText">
+                                            <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                        </div>
+                                        <div class="modalColor">
+                                            <ul class="modalColorUl">
+                                                {% for color in product.colors.all %}
+                                                <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                        style="background-color: #{{ color.code }};" href=""></a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="modalsize-text">
+                                        <div class="modalText">
+                                            <span class="modalSizeVal">Size: <span>40</span> </span>
+                                        </div>
+                                        <div class="modalSize">
+                                            <ul class="modalSizeUl">
+                                                {% for size in product.sizes.all %}
+                                                <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="modalcounter-button">
+                                        <div class="modalCounter">
+                                            <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                            <span class="modalProductCounter" >1</span>
+                                            <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                        <div class="modalButton">
+                                            <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12" id="modaladdtocard-{{ product.id }}">
+                                                ADD TO CARD
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="modalViewFullDetails">
+                                        <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                    </div>
+                                    <div class="modalClose">
+                                        <i class="las la-times"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    {% if shops %}
+    <section id="shopBrands">
+        <div class="container">
+            <div class="row brandTitleRow">
+                <div class="title col-lg-12 col-md-12 col-sm-12">
+                    <p>
+                        Shop By Brands
+                    </p>
+                </div>
+            </div>
+            <div class="row brandImagesRow">
+                {% for shop in shops %}
+                <div class="brand animate__animated">
+                    {% if shop.logo %}
+                    <a href=""><img src="{{ shop.logo.url }}" alt="{{ shop.name }}"></a>
+                    {% else %}
+                    <a href=""><img src="https://t3.ftcdn.net/jpg/03/15/06/10/360_F_315061039_JPz3A8Yd64Ugsy2T6Ez6E9IPwAhs3ftD.jpg" alt="{{ shop.name }}"></a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="brand animate__animated">
+                    <a href=""><img src="../static/images/brandPuma.webp" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <section id="exploreMore">
+        <div class="row">
+            <div class="image-content">
+                <div
+                    class="image"><a href=""><img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Parallex_Banner_1950x.jpg?v=1604993321"></a></div>
+                <div class="content">
+                    <div class="productExplain">
+                        <p>{{ settings.middle_description }}</p>
+                    </div>
+                    <div class="shoeStatus">
+                        <p>{{ settings.middle_title }}</p>
+                    </div>
+                    <a class="exploreMore" href="">{{ settings.middle_link_name }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="bestSeller">
+        <div class="container">
+            <div class="row bestSellerRow">
+                <div class="itemsTitle">
+                    <div class="row bestSellerTitleRow">
+                        <div class="title">
+                            <div class="itemsText">
+                                <p>Best Seller Items</p>
+                            </div>
+                            <div class="allproductsText">
+                                <a href="">
+                                    VIEW ALL PRODUCTS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row imagesRow">
+                        <div class="row smallImageRow col-lg-6 col-md-12 col-sm-12">
+                            {% for product in bestseller_products %}
+                            <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="image">
+                                    <div class="d-none">{{ product.id }}</div>
+                                    <a class="mainImage" href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                            alt="{{ product.name }}">
+                                        <div class="icons">
+                                            <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                        </div>
+
+                                    </a>
+                                    <a class="secondImage" href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                            alt="">
+                                    </a>
+                                    <div class="addToCard">
+                                            
+                                        <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                    </div>
+                                </div>
+                                <div class="name-price">
+                                    <div class="name"><a href="">{{ product.name }}</a></div>
+                                    <div class="price">${{ product.price }}</div>
+                                </div>
+                                <div class="bg-modal d-none">
+                                    <div class="productModal animate__animated d-none">
+                                        <div class="image-name-price">
+                                            <div class="modalImage">
+                                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                            </div>
+                                            <div class="modalname-price">
+                                                <div class="modalName d-none">
+                                                    <a href="">{{ product.id }}</a>
+                                                </div>
+                                                <div class="modalName">
+                                                    <a href="">{{ product.name }}</a>
+                                                </div>
+                                                <div class="modalPrice">
+                                                    ${{ product.price }}
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="modalcolor-text">
+                                            <div class="modalText">
+                                                <span class="modalColorVal">Color : <span>Blue</span> </span>
+                                            </div>
+                                            <div class="modalColor">
+                                                <ul class="modalColorUl">
+                                                    {% for color in product.colors.all %}
+                                                    <li class="modalColorLi" data-value="{{ color.name }}"><a
+                                                            style="background-color: #{{ color.code }};" href=""></a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="modalsize-text">
+                                            <div class="modalText">
+                                                <span class="modalSizeVal">Size: <span>40</span> </span>
+                                            </div>
+                                            <div class="modalSize">
+                                                <ul class="modalSizeUl">
+                                                    {% for size in product.sizes.all %}
+                                                    <li class="modalSizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="modalcounter-button">
+                                            <div class="modalCounter">
+                                                <button class="modalMinus"><i class="fa-solid fa-minus"></i></button>
+                                                <span class="modalProductCounter" >1</span>
+                                                <button class="modalPlus"><i class="fa-solid fa-plus"></i></button>
+                                            </div>
+                                            <div class="modalButton">
+                                                <button class="modalAddCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                                    ADD TO CARD
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modalViewFullDetails">
+                                            <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                        </div>
+                                        <div class="modalClose">
+                                            <i class="las la-times"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row bigImageRow col-lg-6 col-md-12 col-sm-12">
+                            <div class="bigImage">
+                                <div style="background-image: url();"
+                                    class="image">
+                                    <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Product-Banner-2_720x.jpg?v=1604997520">
+                                </div>
+                                <div class="content">
+                                    <div class="discount">{{ settings.last_field_description }}</div>
+                                    <div class="saleStatus">{{ settings.last_field_title }}</div>
+                                    <a class="goToProducts" href="">{{ settings.last_field_link_name }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="subscribe">
+        <div class="row">
+            <div class="image-content">
+                <div
+                    class="image"><img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Newsletter-Parallex-2_1950x.jpg?v=1604993859"></div>
+                <div class="content">
+                    <div class="text">
+                        <p>Daily Update Of Exclusive <br>
+                            Deals & New Shoes</p>
+                    </div>
+                    <form class="form" action="">
+                        <input type="email" placeholder="Your email address" required>
+                        <button class="myBtn" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/home.js'%}"></script>
+<script src="{% static 'homeowlcarousel/owl.carousel.min.js' %}"></script>
+
+<script>
+        $("#searchinput").on('input', function(){
+          $.ajax({
+                type : 'GET',
+                data : {
+                    q: $("#searchinput").val(),
+                },
+                //url: "", 
+                success: function(data){
+                    var resultText = "";
+                    if (data.length == 0){
+                        resultText = "Not found product for your query.";
+                    }
+                    else{
+                        for (var i=0; i<data.length; i++){
+                            resultText = resultText + `
+                                <div class="serachResult">
+                                    <div class="image">
+                                        <a href="">
+                                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="name-price">
+                                        <div class="name">
+                                            <a href="">${data[i].name}</a>
+                                        </div>
+                                        <div class="price">
+                                            <span>
+                                                $${data[i].price}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                        $("#searchresultarea").html(resultText);
+                        $("#viewall").html(`<a href="" class="viewAll">
+                                                View all(${data.length})
+                                                <i class="fa-solid fa-arrow-right-long"></i>
+                                            </a>`
+                                        );
+                    }
+                    else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                        $("#searchresultarea").html(resultText);
+                        $("#viewall").html("");
+                    }
+                    else{
+                        $("#searchresultarea").html("");
+                        $("#viewall").html("");
+                    }
+                },
+                error: function(res){
+                    $("searchresultarea").text(res);
+
+                },
+            });
+        });
+
+
+</script>
+
+<script>
+    $(".modalAddCard").on('click', function(){
+        var productid = $(this).parent().parent().prev().prev().prev().children().last().children().first().children().first().html();
+        var colorval = $(this).parent().parent().prev().prev().children().first().children().last().children().first().html();
+        var sizeval = $(this).parent().parent().prev().children().first().children().last().children().first().html();
+        var count = $(this).parent().parent().children().first().children().next().html();
+        var button = $(this);
+        $.ajax({
+            type : 'POST',
+            data : {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'addtocard',
+                productid: productid,
+                color: colorval,
+                size: sizeval,
+                count: count,
+            },
+            //url: "",
+            beforeSend: function(){
+                button.prop('disabled', true);
+                $(".modalAddCard").html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data){
+                if($("#emptybasket").hasClass("d-none")){
+                    $("#emptybasket").addClass("");
+                }
+                else{
+                    $("#emptybasket").addClass("d-none");
+                }
+                $("#products").prepend(`
+                    <div class="basketProduct">
+                        <div class="basketProductImage">
+                            <a href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                            </a>
+                        </div>
+                        <div class="basketContent">
+                            <div class="d-none">${ data["orderitemid"] }</div>
+                            <div class="productName">
+                                <a href="">
+                                    ${ data["productname"] } (<span>${ data["orderitemsize"] }/${ data["orderitemcolor"] }</span>) x ${ data["quantity"] }
+                                </a>
+                            </div>
+                            <span class="productPrice">
+                                $${ data["productprice"] }
+                            </span>
+                            <div class="removeItem">
+                                <a href='/removeorderitem/${ data["orderitemid"] }/' class="removingItem"><i class="bi bi-trash"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount++;
+                subtotalFloatPrice += data["productprice"] * data["quantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                $(".modalAddCard").html("<i class='fa-solid fa-check'></i>");
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                    button.prop('disabled', false);
+                }, 1500);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                }, 1500);
+            },
+        });
+    });
+
+    $(".removingItem").on('click', function(){
+        var orderitemid = $(this).parent().parent().children().first().html();
+        var parent = $(this).parent().parent().parent();
+        var parentProducts = $(this).parent().parent().parent().parent();
+        $.ajax({
+            type: 'GET',
+            data: {
+                orderitemid: orderitemid,
+            },
+            beforeSend: function(){
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleting...</div>");
+            },
+            success: function(data){
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount--;
+                subtotalFloatPrice -= data["productprice"] * data["orderitemquantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleted <i class='fa-solid fa-check'></i></div>");
+                setTimeout(function(){
+                    parent.remove();
+                    if($("#products").has("div")){
+                        $("#emptybasket").removeClass("");
+                    }
+                    else{
+                        $("#emptybasket").removeClass("d-none");
+                    }
+                }, 2000);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    parent.html(`<div class='products my-5' style='margin:auto; width:70px;'>Error ${ res.status }!</div>`);
+                }, 2000);
+            },
+        });
+    });
+
+    $(".wishlist").on('click', function(){
+        var wishlistitem = $(this);
+        var wishlistcount = $("#wishlistcount");
+        var productid = $(this).parent().parent().children().first().html();
+        $.ajax({
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'wishlist',
+                productid: productid,
+            },
+            beforeSend: function(){
+                wishlistitem.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data){
+                if(data["wishlistcount"]){
+                    wishlistitem.html("<i class='bi-heart-fill whishListBackground'></i>");
+                    wishlistcount.html(`${ data["wishlistcount"] }`);
+                }
+                else{
+                    wishlistitem.html("<i class='bi bi-heart'></i>");
+                    alert(data["warning"]);
+                }
+            },
+        });
+    });
+</script>
+{% endblock %}
