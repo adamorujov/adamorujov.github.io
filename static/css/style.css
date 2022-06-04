@@ -1362,6 +1362,7 @@ ul {
 }
 
 .myOwl .image-text .textDiv .text .title {
+  text-align: center;
   font-size: 70px;
   letter-spacing: 1px;
   font-family: JostBold;
@@ -7916,15 +7917,15 @@ footer #bottomFooter .row .payment {
     margin-top: 10px;
   }
   .myOwl .image-text .textDiv .text .discount {
-    font-size: 14px;
+    font-size: 30px;
   }
   .myOwl .image-text .textDiv .text .title {
-    font-size: 35px;
+    font-size: 50px;
   }
   .myOwl .image-text .textDiv .text .mybtnDiv .myButton {
-    width: 120px;
-    height: 30px;
-    font-size: 11px;
+    width: 170px;
+    height: 40px;
+    font-size: 15px;
   }
   #newArrival .image-content .image img {
     -o-object-fit: cover;
@@ -8187,15 +8188,15 @@ footer #bottomFooter .row .payment {
     font-size: 11px !important;
   }
   .myOwl .image-text .textDiv .text .discount {
-    font-size: 11px;
+    font-size: 15px;
   }
   .myOwl .image-text .textDiv .text .title {
-    font-size: 30px;
+    font-size: 40px;
   }
   .myOwl .image-text .textDiv .text .mybtnDiv .myButton {
-    width: 110px;
-    height: 20px;
-    font-size: 9px;
+    width: 150px;
+    height: 30px;
+    font-size: 13px;
   }
   #bestSeller .bestSellerRow {
     -webkit-box-pack: center !important;
@@ -8340,15 +8341,15 @@ footer #bottomFooter .row .payment {
 
 @media screen and (max-width: 419px) {
   .myOwl .image-text .textDiv .text .discount {
-    font-size: 10px;
+    font-size: 15px;
   }
   .myOwl .image-text .textDiv .text .title {
-    font-size: 15px !important;
+    font-size: 22px !important;
   }
   .myOwl .image-text .textDiv .text .mybtnDiv .myButton {
-    width: 75px;
-    height: 20px;
-    font-size: 6px;
+    width: 100px;
+    height: 30px;
+    font-size: 11px;
   }
   #bestSeller .bestSellerRow {
     -webkit-box-pack: center !important;
