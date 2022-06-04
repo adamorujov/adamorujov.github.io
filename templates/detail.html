@@ -21,30 +21,25 @@
                 <div class="images col-lg-6 col-md-6">
                     <div class="row detailsRowBigImage">
                         <div class="bigImage">
-                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/4_a00b8fb0-5dd2-4ea8-8f3d-d458b9f72a18_720x.jpg?v=1605081140"
-                                alt="">
+                            <img src="{{ product.productimages.first.image.url }}"
+                                alt="{{ product.name }}">
                         </div>
                     </div>
                     <div class="row detailsRowSmallImage">
                         <div class="smallImages">
+                            {% for productimage in product.productimages.all %}
                             <div class="image"><img
-                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/4_a00b8fb0-5dd2-4ea8-8f3d-d458b9f72a18_720x.jpg?v=1605081140"
+                                    src="{{ productimage.image.url }}"
                                     alt=""></div>
-                            <div class="image"><img
-                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/8_bba25afa-c02d-44d0-9929-5f7297260795_720x.jpg?v=1605081140"
-                                    alt=""></div>
-                            <div class="image"><img
-                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/11_a90c335a-b212-4f3d-87e6-06c7efff31f7_720x.jpg?v=1605081140"
-                                    alt=""></div>
-                            <div class="image"><img
-                                    src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_5cba8588-668f-4f83-9b4d-820fff2cb58f_720x.jpg?v=1605081140"
-                                    alt=""></div>
-                                    
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
                 <div class="info col-lg-6 col-md-6">
                     <div class="row titleRow">
+                        <div class="title d-none">
+                            <span id="thisproductid">{{ product.id }}</span>
+                        </div>
                         <div class="title">
                             <span>{{ product.name }}</span>
                         </div>
@@ -84,7 +79,7 @@
                         <p>{{ product.description | truncatewords:45 }}</p>
                     </div>
                     <div class="row colorRow">
-                        <p class="colorVal">COLOR: <span></span></p>
+                        <p class="colorVal">COLOR: <span id="colorname">{{ product.colors.first.name }}</span></p>
                         <ul class="color">
                             {% for color in product.colors.all %}
                             <li class="colorLi" data-value="{{ color.name }}"><a
@@ -93,7 +88,7 @@
                         </ul>
                     </div>
                     <div class="row sizeRow">
-                        <p class="sizeVal">SIZE: <span></span></p>
+                        <p class="sizeVal">SIZE: <span id="sizevalue">{{ product.sizes.first.number }}</span></p>
                         <ul class="size">
                             {% for size in product.sizes.all %}
                             <li class="sizeLi" data-value="{{ size.number }}"><span>{{ size.number }}</span></li>
@@ -107,17 +102,27 @@
                             <button class="plus"><i class="fa-solid fa-plus"></i></button>
                         </div>
                         <div class="whishList col-lg-2 col-md-3 col-sm-6 col-xs-2">
-                            <a href="">
+                            {% if request.user.is_authenticated %}
+                            <a class="wish{{ product.id }}" id="wishlistbutton" style="cursor:pointer;">
                                 {% if not wishlisted %}
-                                <i class="bi bi-heart whishListIcon"></i>
+                                <i class="w bi bi-heart whishListIcon" data-switch="off"></i>
                                 {% else %}
-                                <i class="bi-heart-fill whishListBackground"></i>
+                                <i class="w bi-heart-fill whishListBackground" data-switch="on"></i>
                                 {% endif %}
                             </a>
+                            {% else %}
+                            <a href="{% url 'customer:login' %}"><i class="bi bi-heart" data-switch="off"></i></a>
+                            {% endif %}
                         </div>
-                        <button class="addCard col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                        {% if request.user.is_authenticated %}
+                        <button type="button" class="addCard col-lg-4 col-md-12 col-sm-12 col-xs-12" id="addtocardbutton">
                             ADD TO CARD
                         </button>
+                        {% else %}
+                        <a href="{% url 'customer:login' %}" class="addCard col-lg-4 col-md-12 col-sm-12 col-xs-12" id="addtocardbutton" style="text-decoration:none;">
+                            ADD TO CARD
+                        </a>
+                        {% endif %}
                     </div>
                     <div class="row categoryRow">
                         <span class="name">Brand:<span class="content">{{ product.shop.name }}</span></span>
@@ -148,15 +153,11 @@
                     </p>
                 </div>
                 <div class="row descImage">
+                    {% for image in product.productdescriptionimages.all %}
                     <img class="col-lg-4 col-md-12"
-                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-2_540x.jpg?v=1581901925"
+                        src="{{ image.image.url }}"
                         alt="">
-                    <img class="col-lg-4  col-md-12"
-                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-3_540x.jpg?v=1581901925"
-                        alt="">
-                    <img class="col-lg-4  col-md-12"
-                        src="https://cdn.shopify.com/s/files/1/0332/6420/5963/products/p28-4_540x.jpg?v=1581901925"
-                        alt="">
+                    {% endfor %}
                 </div>
             </div>
             <div class="row detailsTitleRow tab d-none" id="commentsTab">
@@ -164,9 +165,10 @@
                 <div class="title">
                     <div class="star-review">
                         {% if not comments %}
-                        <span class="noReview">
+                        <span class="starIcons">
                             No comments yet.
                         </span>
+                        <span class="basedOn"></span>
                         {% else %}
                         <span class="starIcons">
                             {% for i in starpoint_int %}
@@ -180,7 +182,7 @@
                             {% endfor %}
                         </span>
                         <span class="basedOn">
-                            Based on {{ comments | length }} comment
+                            Based on {{ comments | length }} comment(s)
                         </span>
                         {% endif %}
                     </div>
@@ -193,10 +195,12 @@
                     </p>
                     <form method="POST">
                         {% csrf_token %}
+                        {% if not request.user.is_authenticated %}
                         <label class="nameLbl" for="name">Name</label><br>
                         <input class="name-mail" type="text" name="name" id="name" placeholder="Enter your name"><br><br>
                         <label class="mailLbl" for="mail">Email</label><br>
                         <input class="name-mail" type="email" name="email" id="mail" placeholder="jamalaz@code.edu.az"><br><br>
+                        {% endif %}
                         <label class="rating">
                             Rating
                         </label><br>
@@ -256,37 +260,55 @@
                     {% for product in also_like_products %}
                     <div class="smallImage">
                         <div class="image">
-                            <a class="mainImage" href="">
-                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                            <div class="d-none">{{ product.id }}</div>
+                            <a class="mainImage" href="{% url 'shop:detail' product.id %}">
+                                <img src="{{ product.productimages.first.image.url }}"
                                     alt="">
                                 <div class="icons">
-                                    <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
-                                    <a href="" class="view"><i class="bi bi-eye"></i></a>
+                                    {% if request.user.is_authenticated %}
+                                    {% if product in wishlistproducts %}
+                                    <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                    {% else %}
+                                    <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                    {% endif %}
+                                    {% else %}
+                                    <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                    {% endif %}
                                 </div>
 
                             </a>
-                            <a class="secondImage" href="">
-                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                            <a class="secondImage" href="{% url 'shop:detail' product.id %}">
+                                <img src="{{ product.productimages.last.image.url }}"
                                     alt="">
                             </a>
+                            {% if request.user.is_authenticated %}
                             <div class="addToCard">
                                             
-                                <a class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                             </div>
+                            {% else %}
+                            <div class="addToCard">
+                                            
+                                <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="name-price">
-                            <div class="name"><a href="">{{ product.name }}</a></div>
-                            <div class="price">£{{ product.price }}</div>
+                            <div class="name"><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></div>
+                            <div class="price">${{ product.price }}</div>
                         </div>
                         <div class="bg-modal d-none">
                             <div class="productModal animate__animated d-none">
                                 <div class="image-name-price">
                                     <div class="modalImage">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                        <img src="{{ product.productimages.first.image.url }}" alt="">
                                     </div>
                                     <div class="modalname-price">
+                                        <div class="d-none modalName">
+                                            <a href="">{{ product.id }}</a>
+                                        </div>
                                         <div class="modalName">
-                                            <a href="">{{ product.name }}</a>
+                                            <a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a>
                                         </div>
                                         <div class="modalPrice">
                                             ${{ product.price }}
@@ -332,7 +354,7 @@
                                     </div>
                                 </div>
                                 <div class="modalViewFullDetails">
-                                    <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                    <a href="{% url 'shop:detail' product.id %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                                 </div>
                                 <div class="modalClose">
                                     <i class="las la-times"></i>
@@ -357,37 +379,55 @@
                     {% for product in recently_viewed_products %}
                     <div class="smallImage">
                         <div class="image">
-                            <a class="mainImage" href="">
-                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                            <div class="d-none">{{ product.product.id }}</div>
+                            <a class="mainImage" href="{% url 'shop:detail' product.product.id %}">
+                                <img src="{{ product.product.productimages.first.image.url }}"
                                     alt="">
                                 <div class="icons">
-                                    <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
-                                    <a href="" class="view"><i class="bi bi-eye"></i></a>
+                                    {% if request.user.is_authenticated %}
+                                    {% if product.product in wishlistproducts %}
+                                    <a class="wishlist wish{{ product.product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                    {% else %}
+                                    <a class="wishlist wish{{ product.product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                    {% endif %}
+                                    {% else %}
+                                    <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                    {% endif %}
                                 </div>
 
                             </a>
-                            <a class="secondImage" href="">
-                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                            <a class="secondImage" href="{% url 'shop:detail' product.product.id %}">
+                                <img src="{{ product.product.productimages.last.image.url }}"
                                     alt="">
                             </a>
+                            {% if request.user.is_authenticated %}
                             <div class="addToCard">
                                             
-                                <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                             </div>
+                            {% else %}
+                            <div class="addToCard">
+                                            
+                                <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="name-price">
-                            <div class="name"><a href="">{{ product.product.name }}</a></div>
+                            <div class="name"><a href="{% url 'shop:detail' product.product.id %}">{{ product.product.name }}</a></div>
                             <div class="price">£{{ product.product.price }}</div>
                         </div>
                         <div class="bg-modal d-none">
                             <div class="productModal animate__animated d-none">
                                 <div class="image-name-price">
                                     <div class="modalImage">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                        <img src="{{ product.product.productimages.first.image.url }}" alt="">
                                     </div>
                                     <div class="modalname-price">
+                                        <div class="modalName d-none">
+                                            <a href="">{{ product.id }}</a>
+                                        </div>
                                         <div class="modalName">
-                                            <a href="">{{ product.product.name }}</a>
+                                            <a href="{% url 'shop:detail' product.product.id %}">{{ product.product.name }}</a>
                                         </div>
                                         <div class="modalPrice">
                                             ${{ product.product.price }}
@@ -433,7 +473,7 @@
                                     </div>
                                 </div>
                                 <div class="modalViewFullDetails">
-                                    <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                    <a href="{% url 'shop:detail' product.product.id %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                                 </div>
                                 <div class="modalClose">
                                     <i class="las la-times"></i>
@@ -511,6 +551,328 @@
             error: function(res){
                 $("searchresultarea").text(res);
 
+            },
+        });
+    });
+</script>
+
+<script>
+    $(".modalAddCard").on('click', function(){
+        var productid = $(this).parent().parent().prev().prev().prev().children().last().children().first().children().first().html();
+        var colorval = $(this).parent().parent().prev().prev().children().first().children().last().children().first().html();
+        var sizeval = $(this).parent().parent().prev().children().first().children().last().children().first().html();
+        var count = $(this).parent().parent().children().first().children().next().html();
+        $.ajax({
+            type : 'POST',
+            data : {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: "addtocard",
+                productid: productid,
+                color: colorval,
+                size: sizeval,
+                count: count,
+            },
+            beforeSend: function(){
+                $(".modalAddCard").html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                $(".modalAddCard").attr("disabled", "disabled");
+            },
+            success: function(data){
+                if($("#emptybasket").hasClass("d-none")){
+                    $("#emptybasket").addClass("");
+                }
+                else{
+                    $("#emptybasket").addClass("d-none");
+                }
+                $("#products").prepend(`
+                    <div class="basketProduct">
+                        <div class="basketProductImage">
+                            <a href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                            </a>
+                        </div>
+                        <div class="basketContent">
+                            <div class="d-none">${ data["orderitemid"] }</div>
+                            <div class="productName">
+                                <a href="">
+                                    ${ data["productname"] } (<span>${ data["orderitemsize"] }/${ data["orderitemcolor"] }</span>) x ${ data["quantity"] }
+                                </a>
+                            </div>
+                            <span class="productPrice">
+                                $${ data["productprice"] }
+                            </span>
+                            <div class="removeItem">
+                                <span class="removingItem"><i class="bi bi-trash"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount++;
+                subtotalFloatPrice += data["productprice"] * data["quantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                $(".modalAddCard").html("<i class='fa-solid fa-check'></i>");
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
+                }, 1500);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
+                }, 1500);
+            },
+        });
+    });
+
+    $("#products").on('click', '.removingItem', function(){
+        var orderitemid = $(this).parent().parent().children().first().html();
+        var parent = $(this).parent().parent().parent();
+        var parentProducts = $(this).parent().parent().parent().parent();
+        $.ajax({
+            type: 'GET',
+            data: {
+                orderitemid: orderitemid,
+            },
+            beforeSend: function(){
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleting...</div>");
+            },
+            success: function(data){
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount--;
+                subtotalFloatPrice -= data["productprice"] * data["orderitemquantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleted <i class='fa-solid fa-check'></i></div>");
+                setTimeout(function(){
+                    parent.remove();
+                    if($("#products").has("div")){
+                        $("").insertAfter(".basketTxt-closeIcon");
+                    }
+                    else{
+                        $(`<div class="emptyBasket" id="emptybasket">
+                            <div class="emptybasketIcon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <p>Your basket is empty</p>
+                            <div class="returnBtn">
+                                <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                            </div>
+                        </div>`).insertAfter(".basketTxt-closeIcon");
+                    }
+                }, 2000);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    parent.html(`<div class='products my-5' style='margin:auto; width:70px;'>Error ${ res.status }!</div>`);
+                }, 2000);
+            },
+        });
+    });
+
+    $(".wishlist").on('click', function(){
+        var productid = $(this).parent().parent().children().first().html();
+        var wishlistitem = $(".wish"+productid);
+        var wishlistcount = $("#wishlistcount");
+        $.ajax({
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'wishlist',
+                productid: productid,
+            },
+            beforeSend: function(){
+                wishlistitem.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data){
+                wishlistcount.html(data["wishlistcount"]);
+                wishlistitem.html(`<i class='${ data["stat"] }'></i>`);
+            },
+        });
+    });
+
+</script>
+<script>
+    $("#wishlistbutton").on('click', function(){
+        var productid = $("#thisproductid").html();
+        var wishlistbutton = $(".wish"+productid);
+        var wishlistcount = $("#wishlistcount");
+        var switchbutton = $(".w");
+        
+        $.ajax({
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'wishlisted',
+                dswitch: switchbutton.attr("data-switch"),
+                productid: productid,
+            },
+            beforeSend: function(){
+                wishlistbutton.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data){
+                if(data["switch"] == "on"){
+                    wishlistbutton.html(`<i class="${ data["itemclass"] }"></i>`);
+                    wishlistcount.html(data["wishlistcount"]);
+                }
+                else{
+                    wishlistbutton.html(`<i class="${ data["itemclass"] }"></i>`);
+                    wishlistcount.html(data["wishlistcount"]);
+                }
+            },
+            error: function(resp){
+                alert(resp.status);
+            }
+        });
+    });
+
+    $("#addtocardbutton").on('click', function(){
+        var productid = $("#thisproductid").html();
+        var colorname = $("#colorname").html();
+        var sizevalue = $("#sizevalue").html();
+        var quantity = $("#productCounter").val();
+        var thisbutton = $(this);
+
+        $.ajax({
+            type: "POST",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'addtocard',
+                productid: productid,
+                color: colorname,
+                size: sizevalue,
+                count: quantity,
+            },
+            beforeSend: function(){
+                thisbutton.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                thisbutton.attr("disabled", "disabled");
+            },
+            success: function(data){
+                if($("#emptybasket").hasClass("d-none")){
+                    $("#emptybasket").addClass("");
+                }
+                else{
+                    $("#emptybasket").addClass("d-none");
+                }
+                $("#products").prepend(`
+                    <div class="basketProduct">
+                        <div class="basketProductImage">
+                            <a href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                            </a>
+                        </div>
+                        <div class="basketContent">
+                            <div class="d-none">${ data["orderitemid"] }</div>
+                            <div class="productName">
+                                <a href="">
+                                    ${ data["productname"] } (<span>${ data["orderitemsize"] }/${ data["orderitemcolor"] }</span>) x ${ data["quantity"] }
+                                </a>
+                            </div>
+                            <span class="productPrice">
+                                $${ data["productprice"] }
+                            </span>
+                            <div class="removeItem">
+                                <span class="removingItem"><i class="bi bi-trash"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount++;
+                subtotalFloatPrice += data["productprice"] * data["quantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                thisbutton.html("<i class='fa-solid fa-check'></i>");
+                setTimeout(function(){
+                    thisbutton.html("ADD TO CARD");
+                    thisbutton.removeAttr("disabled");
+                }, 1500);
+            },
+            error: function(res){
+                alert("Please, select color and size. ");
+                setTimeout(function(){
+                    thisbutton.html("ADD TO CARD");
+                    thisbutton.removeAttr("disabled");
+                }, 1500);
+            },
+        });
+    });
+
+    $(".commentFormSubmit").on('click', function(e){
+        e.preventDefault();
+        var productid = $("#thisproductid").html();
+        var name = $("#name").val();
+        var email = $("#mail").val();
+        var rating = $('input[type="radio"][name="star"]:checked').val();
+        var comment = $("#comment").val();
+        var thisbutton = $(this);
+
+        $.ajax({
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'comment',
+                productid: productid,
+                name: name,
+                email: email,
+                rating: rating,
+                comment: comment,
+            },
+            beforeSend: function(){
+                thisbutton.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                thisbutton.attr("disabled", "disabled");
+            },
+            success: function(data){
+                $(".commentsRow").prepend(`
+                <div class="comment">
+                    <hr>
+                    <div class="commentIcons" id="commenticons">
+                        
+                    </div>
+                    <div class="name-date">
+                        <span>
+                            <span class="name">${ data["name"] }</span> on <span class="date">${ data["pub_date"]}</span>
+                        </span>
+                    </div>
+                    <div class="commentContent">
+                        <p>
+                            ${ data["comment"] }
+                        </p>
+                    </div>
+                </div>
+                `);
+                for(i=1; i<=data["rating"]; i++){
+                    $("#commenticons").append("<i class='fa-solid fa-star'></i> ");
+                }
+                for(i=1; i<=5-data["rating"]; i++){
+                    $("#commenticons").append("<i class='fa-regular fa-star'></i> ");
+                }
+                $(".starIcons").html("");
+                for(i=1; i<=data["starpoint_int"]; i++){
+                    $(".starIcons").append('<span class="fa-solid fa-star"></span> ');
+                }
+                if(data["has_rest"]){
+                    $(".starIcons").append('<span class="fa-solid fa-star-half-stroke"></span> ');
+
+                }
+                for(i=1; i<=data["starpoint_rest"]; i++){
+                    $(".starIcons").append('<span class="fa-regular fa-star"></span> ');
+                }
+                $(".basedOn").html(`Based on ${ data["comments_number"]} comment(s)`);
+                thisbutton.html("<i class='fa-solid fa-check'></i>");
+                setTimeout(function(){
+                    thisbutton.html("Submit Comment");
+                    thisbutton.removeAttr("disabled");
+                }, 1500);
             },
         });
     });

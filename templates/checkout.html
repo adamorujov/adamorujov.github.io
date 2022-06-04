@@ -77,7 +77,7 @@
                     </form>
                 </div>
                 <button class="btn btn-primary">
-                    <b>Pay</b> $ <span id="payAmount">2.15</span>
+                    <b>Pay</b> $ <span id="payAmount">{{ order.get_subtotal }}</span>
                 </button>
             </section>
             <!--
@@ -86,66 +86,32 @@
             <section class="cart">
                 <div class="cart-item-box">
                     <h2 class="section-heading">Order Summery</h2>
-                    <div class="product-card">
+                    {% for orderitem in orderitems %}
+                    <div class="product-card productcard{{ orderitem.id }}">
                         <div class="card">
-                            <div class="img-box">
-                                <img src="./images/green-tomatoes.jpg"
-                                     alt="Green tomatoes"
+                            <div class="img-box mx-3">
+                                <img src="{{ orderitem.product.productimages.first.image.url }}"
+                                     alt="{{ orderitem.product.name }}"
                                      width="80px"
                                      class="product-img">
                             </div>
-                            <div class="detail">
-                                <h4 class="product-name">Green Tomatoes 1 Kilo</h4>
+                            <div class="detail mx-1">
+                                <h4 class="product-name">{{ orderitem.product.name }}</h4>
                                 <div class="wrapper">
                                     <div class="product-qty">
-                                        <button id="decrement">
-                                            <ion-icon name="remove-outline"></ion-icon>
-                                        </button>
-                                        <span id="quantity">1</span>
-                                        <button id="increment">
-                                            <ion-icon name="add-outline"></ion-icon>
-                                        </button>
+                                        <span id="quantity">{{ orderitem.color }}</span>
+                                    </div>
+                                    <div class="product-qty">
+                                        <span id="quantity">{{ orderitem.quantity }}</span>
                                     </div>
                                     <div class="price">
-                                        $ <span id="price">1.25</span>
+                                        $ <span id="price">{{ orderitem.product.price }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="product-close-btn">
-                                <ion-icon name="close-outline"></ion-icon>
-                            </button>
                         </div>
                     </div>
-                    <div class="product-card">
-                        <div class="card">
-                            <div class="img-box">
-                                <img src="./images/cabbage.jpg"
-                                     alt="Cabbage"
-                                     width="80px"
-                                     class="product-img">
-                            </div>
-                            <div class="detail">
-                                <h4 class="product-name">Cabbage 1 Pcs</h4>
-                                <div class="wrapper">
-                                    <div class="product-qty">
-                                        <button id="decrement">
-                                            <ion-icon name="remove-outline"></ion-icon>
-                                        </button>
-                                        <span id="quantity">1</span>
-                                        <button id="increment">
-                                            <ion-icon name="add-outline"></ion-icon>
-                                        </button>
-                                    </div>
-                                    <div class="price">
-                                        $ <span id="price">0.80</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="product-close-btn">
-                                <ion-icon name="close-outline"></ion-icon>
-                            </button>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="wrapper">
                     <div class="discount-token">
@@ -160,16 +126,16 @@
                     </div>
                     <div class="amount">
                         <div class="subtotal">
-                            <span>Subtotal</span> <span>$ <span id="subtotal">2.05</span></span>
+                            <span>Subtotal</span> <span>$ <span id="subtotal">{{ order.get_subtotal }}</span></span>
                         </div>
                         <div class="tax">
-                            <span>Tax</span> <span>$ <span id="tax">0.10</span></span>
+                            <span>Tax</span> <span>$ <span id="tax">0.00</span></span>
                         </div>
                         <div class="shipping">
                             <span>Shipping</span> <span>$ <span id="shipping">0.00</span></span>
                         </div>
                         <div class="total">
-                            <span>Total</span> <span>$ <span id="total">2.15</span></span>
+                            <span>Total</span> <span>$ <span id="total">{{ order.get_subtotal }}</span></span>
                         </div>
                     </div>
                 </div>
@@ -187,4 +153,120 @@
   -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+        $("#searchinput").on('input', function(){
+          $.ajax({
+                type : 'GET',
+                data : {
+                    q: $("#searchinput").val(),
+                },
+                //url: "", 
+                success: function(data){
+                    var resultText = "";
+                    if (data.length == 0){
+                        resultText = "Not found product for your query.";
+                    }
+                    else{
+                        for (var i=0; i<data.length; i++){
+                            resultText = resultText + `
+                                <div class="serachResult">
+                                    <div class="image">
+                                        <a href="">
+                                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="name-price">
+                                        <div class="name">
+                                            <a href="">${data[i].name}</a>
+                                        </div>
+                                        <div class="price">
+                                            <span>
+                                                $${data[i].price}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                        $("#searchresultarea").html(resultText);
+                        $("#viewall").html(`<a href="" class="viewAll">
+                                                View all(${data.length})
+                                                <i class="fa-solid fa-arrow-right-long"></i>
+                                            </a>`
+                                        );
+                    }
+                    else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                        $("#searchresultarea").html(resultText);
+                        $("#viewall").html("");
+                    }
+                    else{
+                        $("#searchresultarea").html("");
+                        $("#viewall").html("");
+                    }
+                },
+                error: function(res){
+                    $("searchresultarea").text(res);
+
+                },
+            });
+        });
+
+</script>
+<script>
+    $("#products").on('click', '.removingItem', function(){
+        var orderitemid = $(this).parent().parent().children().first().html();
+        var parent = $(this).parent().parent().parent();
+        var parentProducts = $(this).parent().parent().parent().parent();
+        var orderitem = $('.productcard'+orderitemid);
+        $.ajax({
+            type: 'GET',
+            data: {
+                orderitemid: orderitemid,
+            },
+            beforeSend: function(){
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleting...</div>");
+            },
+            success: function(data){
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount--;
+                subtotalFloatPrice -= data["productprice"] * data["orderitemquantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                $("#subtotal").text(subtotalFloatPrice);
+                $("#total").text(subtotalFloatPrice);
+                $("#payAmount").text(subtotalFloatPrice);
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleted <i class='fa-solid fa-check'></i></div>");
+                setTimeout(function(){
+                    parent.remove();
+                    orderitem.remove();
+                    if($("#products").has("div")){
+                        $("").insertAfter(".basketTxt-closeIcon");
+                    }
+                    else{
+                        $(`<div class="emptyBasket" id="emptybasket">
+                            <div class="emptybasketIcon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <p>Your basket is empty</p>
+                            <div class="returnBtn">
+                                <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                            </div>
+                        </div>`).insertAfter(".basketTxt-closeIcon");
+                    }
+                }, 2000);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    parent.html(`<div class='products my-5' style='margin:auto; width:70px;'>Error ${ res.status }!</div>`);
+                }, 2000);
+            },
+        });
+    });
+</script>
 {% endblock %}

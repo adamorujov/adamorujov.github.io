@@ -13,6 +13,7 @@
 {% include 'components/header.html' %}
 <!-- Header end -->
 <main> 
+
     <section id="loginSection">
         <div class="container">
             <div class="row loginRow">
@@ -22,21 +23,104 @@
                             <span class="loginTxt">LOGIN</span>
                         </div>
                         <div class="loginInputArea">
-                            <form action="post">
-                                <label for="mail">Email <span>*</span></label><br>
-                                <input id="mail" type="email" autocomplete="off"><br><br>
-                                <label for="pw">Password <span>*</span></label><br>
-                                <input id="pw" type="password" autocomplete="off"><br><br>
-                                <button type="submit">SIGN IN</button>
+                            {% if messages %}
+                            <ul style="list-style-type:none;" class="messages">
+                                {% for message in messages %}
+                                <li class="alert alert-info"><span>{{ message }}</span></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <form method="post" onsubmit="btnsubmit()">
+                                {% csrf_token %}
+                                
+                                
+                                {{ form.username.label_tag }}<br>
+                                {{ form.username }}<br><br>
+                                
+                                
+                                {{ form.password.label_tag }}<br>
+                                {{ form.password }}<br><br>
+                                
+                                
+                                
+                                <button type="submit" id="thissubmitbtn">SIGN IN</button>
                             </form>
                         </div>
-                        <p class="log-regP">New customer? <a class="goRegister" href="">Create your account</a></p>
-                        <p class="log-regP">Forgot password? <a class="goRecoverPassword" href="">Recover password</a></p>
+                        <p class="log-regP">New customer? <a class="goRegister" href="{% url 'customer:register' %}">Create your account</a></p>
+                        <p class="log-regP">Forgot password? <a class="goRecoverPassword" href="{% url 'customer:forgotpassword' %}">Recover password</a></p>
                     </div>
                 </div>
             </div>
         </div> 
     </section> 
 </main>
+
+{% endblock %}
+
+{%  block javascript %}
+
+<script>
+    function btnsubmit(){
+        document.getElementById("thissubmitbtn").innerHTML="<i class='fa-solid fa-arrow-rotate-right'></i>";
+    }
+    $("#searchinput").on('input', function(){
+      $.ajax({
+            type : 'GET',
+            data : {
+                q: $("#searchinput").val(),
+            },
+            //url: "", 
+            success: function(data){
+                var resultText = "";
+                if (data.length == 0){
+                    resultText = "Not found product for your query.";
+                }
+                else{
+                    for (var i=0; i<data.length; i++){
+                        resultText = resultText + `
+                            <div class="serachResult">
+                                <div class="image">
+                                    <a href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    </a>
+                                </div>
+                                <div class="name-price">
+                                    <div class="name">
+                                        <a href="">${data[i].name}</a>
+                                    </div>
+                                    <div class="price">
+                                        <span>
+                                            $${data[i].price}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html(`<a href="" class="viewAll">
+                                            View all(${data.length})
+                                            <i class="fa-solid fa-arrow-right-long"></i>
+                                        </a>`
+                                    );
+                }
+                else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html("");
+                }
+                else{
+                    $("#searchresultarea").html("");
+                    $("#viewall").html("");
+                }
+            },
+            error: function(res){
+                $("searchresultarea").text(res);
+
+            },
+        });
+    });
+</script>
 
 {% endblock %}

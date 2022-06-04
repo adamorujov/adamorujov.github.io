@@ -20,6 +20,7 @@ class Banner(models.Model):
         return self.title
 
 class PageSettings(models.Model):
+    page_logo = models.ImageField("Logo", blank=True, null=True)
     home_title = models.CharField(max_length=300)
     home_meta_description = models.TextField()
     home_meta_keywords = models.TextField()
@@ -157,7 +158,7 @@ class Sale(models.Model):
         return str(self.percent) + "%"
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="productimages")
     image = models.ImageField()
 
     class Meta:
@@ -166,10 +167,10 @@ class ProductImage(models.Model):
         verbose_name_plural = "Product images"
 
     def __str__(self):
-        return self.product.name + " | " + self.id
+        return self.product.name + " | " + str(self.id)
 
 class ProductDescriptionImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="productdescriptionimages")
     image = models.ImageField()
 
     class Meta:
@@ -178,7 +179,7 @@ class ProductDescriptionImage(models.Model):
         verbose_name_plural = "Product description images"
 
     def __str__(self):
-        return self.product.name + " | " + self.id
+        return self.product.name + " | " + str(self.id)
     
 class Color(models.Model):
     name = models.CharField(max_length=15)

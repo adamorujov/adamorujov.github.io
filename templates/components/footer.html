@@ -5,25 +5,24 @@
                 <div class="info-links">
                     <div class="info col-lg-3 col-md-6 col-sm-12">
                         <div class="logo"><img
-                                src="https://cdn.shopify.com/s/files/1/1385/4931/files/Logo-img_38c63be0-fb31-4328-b860-cedd88ea4232_170x.png?v=1604980222"
+                                src="{{ settings.page_logo.url }}"
                                 alt=""></div>
-                        <div class="location"><a href="">
+                        <div class="location"><a>
                                 <i class="fa-solid fa-location-dot"></i></a>
-                            <span>184 Main Rd E, St Albans</span>
+                            <span>{{ settings.address }}</span>
                         </div>
                         <div class="mail">
                             <i class="fa-solid fa-envelope"></i>
-                            <a href="mailto:zeynalli6603.7@gmail.com">zeynalli6603.7@gmail.com</a>
+                            <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>
                         </div>
                         <div class="number">
                             <i class="fa-solid fa-phone"></i>
-                            <span>+994556436755</span>
+                            <span><a href="tel:{{ settings.telephone }}" style="text-decoration:none; color:white;">{{ settings.telephone }}</a></span>
                         </div>
                         <div class="socials">
-                            <a class="fb" href=""><i class="fa-brands fa-facebook-f"></i></a>
-                            <a class="tw" href=""><i class="fa-brands fa-twitter"></i></a>
-                            <a class="ig" href=""><i class="fa-brands fa-instagram"></i></a>
-                            <a class="yt" href=""><i class="fa-brands fa-youtube"></i></a>
+                            {% for account in settings.socialmediaaccounts.all %}
+                            <a class="fb mx-3" href="{{ account.link }}"><i class="fa-brands fa-{{ account.name }}"></i></a>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="links col-lg-9 col-md-6 col-sm-12 ">
@@ -31,42 +30,28 @@
                             <li class="footerBrands">
                                 <p class="fullWidthBrand">BRANDS</p>
                                 <ul class="footerBrandScroll">
-                                    <li><a href="">Nike</a></li>
-                                    <li><a href="">Adidas</a></li>
-                                    <li><a href="">Puma</a></li>
-                                    <li><a href="">Converse</a></li>
-                                    <li><a href="">Vans</a></li>
-                                    <li><a href="">New Balance</a></li>
-                                    <li><a href="">Nike</a></li>
-                                    <li><a href="">Adidas</a></li>
-                                    <li><a href="">Puma</a></li>
-                                    <li><a href="">Converse</a></li>
-                                    <li><a href="">Vans</a></li>
-                                    <li><a href="">New Balance</a></li>
+                                    {% for shop in shops %}
+                                    <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
+                                    {% empty %}
+                                    <li>No shop yet.</li>
+                                    {% endfor %}
                                 </ul>
                             </li>
                             <li class="footerProducts">
                                 <p class="fullWidthProducts">PRODUCTS</p>
                                 <ul class="footerProductsScroll">
-                                    <li><a href="">All products</a></li>
-                                    <li><a href="">Running</a></li>
-                                    <li><a href="">Jordan</a></li>
-                                    <li><a href="">Lifestyle</a></li>
-                                    <li><a href="">Football</a></li>
-                                    <li><a href="">Basketball</a></li>
-                                    <li><a href="">All products</a></li>
-                                    <li><a href="">Running</a></li>
-                                    <li><a href="">Jordan</a></li>
-                                    <li><a href="">Lifestyle</a></li>
-                                    <li><a href="">Football</a></li>
-                                    <li><a href="">Basketball</a></li>
+                                    <li><a href="{% url 'shop:products' %}">All products</a></li>
+                                    {% for category in categories %}
+                                    <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
+                                    {% empty %}
+                                    <li>No category yet.</li>
+                                    {% endfor %}
                                 </ul>
                             </li>
                             <li class="footerInformaton">
                                 <p class="fullWidthInformation">INFORMATION</p>
                                 <ul>
-                                    <li><a href="">Contact us</a></li>
-                                    <li><a href="">FAQs</a></li>
+                                    <li><a href="{% url 'shop:contact' %}">Contact us</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -84,25 +69,24 @@
                 <div class="info-links">
                     <div class="info col-lg-3 col-md-6 col-sm-12">
                         <div class="logo"><img
-                                src="https://cdn.shopify.com/s/files/1/1385/4931/files/Logo-img_38c63be0-fb31-4328-b860-cedd88ea4232_170x.png?v=1604980222"
+                                src="{{ settings.page_logo.url }}"
                                 alt=""></div>
-                        <div class="location"><a href="">
+                        <div class="location"><a>
                                 <i class="fa-solid fa-location-dot"></i></a>
-                            <span>184 Main Rd E, St Albans</span>
+                            <span>{{ settings.address }}</span>
                         </div>
                         <div class="mail">
                             <i class="fa-solid fa-envelope"></i>
-                            <a href="mailto:zeynalli6603.7@gmail.com">zeynalli6603.7@gmail.com</a>
+                            <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>
                         </div>
                         <div class="number">
                             <i class="fa-solid fa-phone"></i>
-                            <span>+994556436755</span>
+                            <span><a href="tel:{{ settings.telephone }}" style="text-decoration:none; color:white;">{{ settings.telephone }}</a></span>
                         </div>
                         <div class="socials">
-                            <a class="fb" href=""><i class="fa-brands fa-facebook-f"></i></a>
-                            <a class="tw" href=""><i class="fa-brands fa-twitter"></i></a>
-                            <a class="ig" href=""><i class="fa-brands fa-instagram"></i></a>
-                            <a class="yt" href=""><i class="fa-brands fa-youtube"></i></a>
+                            {% for account in settings.socialmediaaccounts.all %}
+                            <a class="fb mx-3" href="{{ account.link }}"><i class="fa-brands fa-{{ account.name }}"></i></a>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="links col-lg-9 col-md-6 col-sm-12 ">
@@ -111,32 +95,28 @@
                                 <p class="fullWidthBrand">BRANDS</p>
                                 <p class="responsiveBrand">BRANDS</p>
                                 <ul>
-                                    <li><a href="">Nike</a></li>
-                                    <li><a href="">Adidas</a></li>
-                                    <li><a href="">Puma</a></li>
-                                    <li><a href="">Converse</a></li>
-                                    <li><a href="">Vans</a></li>
-                                    <li><a href="">New Balance</a></li>
+                                    {% for shop in shops %}
+                                    <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
+                                    {% empty %}
+                                    <li>No shop yet.</li>
+                                    {% endfor %}
                                 </ul>
                             </li>
                             <li class="footerProducts">
                                 <p class="fullWidthProducts">PRODUCTS</p>
                                 <p class="responsiveProducts">PRODUCTS</p>
                                 <ul>
-                                    <li><a href="">All products</a></li>
-                                    <li><a href="">Running</a></li>
-                                    <li><a href="">Jordan</a></li>
-                                    <li><a href="">Lifestyle</a></li>
-                                    <li><a href="">Football</a></li>
-                                    <li><a href="">Basketball</a></li>
+                                    <li><a href="{% url 'shop:products' %}">All products</a></li>
+                                    {% for category in categories %}
+                                    <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
+                                    {% endfor %}
                                 </ul>
                             </li>
                             <li class="footerInformaton">
                                 <p class="fullWidthInformation">INFORMATION</p>
                                 <p class="responsiveInformation">INFORMATION</p>
                                 <ul>
-                                    <li><a href="">Contact us</a></li>
-                                    <li><a href="">FAQs</a></li>
+                                    <li><a href="{% url 'shop:contact' %}">Contact us</a></li>
                                 </ul>
                             </li>
                         </ul>

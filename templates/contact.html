@@ -37,14 +37,19 @@
                     </div>
                     <form class="contactForm" action="">
                         <label for="contactName">Your Name (required)</label><br>
-                        <input type="text" id="contactName" required><br><br>
+                        <input type="text" id="contactName" placeholder="Your name"><br>
+                        <span><small style="font-size:85%; color:red;" id="nameError"></small></span>
+                        <br>
                         <label for="contactMail">Your Email (required)</label><br>
-                        <input type="email" id="contactMail" required><br><br>
+                        <input type="email" id="contactMail" placeholder="Email"><br>
+                        <span><small style="font-size:75%; color:red;" id="mailError"></small></span><br>
                         <label for="contactTel">Your Phone Number</label><br>
-                        <input type="tel" id="contactTel"><br><br>
+                        <input type="tel" id="contactTel" placeholder="Your phone number"><br>
+                        <span><small style="font-size:75%; color:red;" id="telError"></small></span><br>
                         <label for="contactTextArea">Your Message</label><br>
-                        <textarea name="" id="contactTextArea" cols="30" rows="10"></textarea><br><br>
-                        <button class="contactButton">Send</button>
+                        <textarea name="" id="contactTextArea" cols="30" rows="10" placeholder="Your message"></textarea><br>
+                        <span><small style="font-size:75%; color:red;" id="messageError"></small></span><br>
+                        <button type="submit" class="contactButton">Send</button>
                     </form>
                 </div>
                 <div class="row contactInfoRow col-lg-6">
@@ -52,9 +57,9 @@
                         <p>CONTACT INFORMATION</p>
                     </div>
                     <div class="contactWrapper col-lg-3">
-                        <p class="contactInfoDescription">{{ pagesettings.about }}</p>
-                        <p class="contactInfoAdresss">{{ pagesettings.address }}</p>
-                        <p class="contactInfoMail">{{ pagesettings.email }}</p>
+                        <p class="contactInfoDescription">{{ settings.about }}</p>
+                        <p class="contactInfoAdresss">{{ settings.address }}</p>
+                        <p class="contactInfoMail">{{ settings.email }}</p>
                         <p class="contactInfoWorkTime">Everyday 09:00-18:00</p>
                     </div>
                 </div>
@@ -71,4 +76,202 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $("#searchinput").on('input', function(){
+        $.ajax({
+              type : 'GET',
+              data : {
+                  q: $("#searchinput").val(),
+              },
+              //url: "", 
+              success: function(data){
+                  var resultText = "";
+                  if (data.length == 0){
+                      resultText = "Not found product for your query.";
+                  }
+                  else{
+                      for (var i=0; i<data.length; i++){
+                          resultText = resultText + `
+                              <div class="serachResult">
+                                  <div class="image">
+                                      <a href="">
+                                          <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                      </a>
+                                  </div>
+                                  <div class="name-price">
+                                      <div class="name">
+                                          <a href="">${data[i].name}</a>
+                                      </div>
+                                      <div class="price">
+                                          <span>
+                                              $${data[i].price}
+                                          </span>
+                                      </div>
+                                  </div>
+                              </div>
+                          `;
+                      }
+                  }
+                  if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                      $("#searchresultarea").html(resultText);
+                      $("#viewall").html(`<a href="" class="viewAll">
+                                              View all(${data.length})
+                                              <i class="fa-solid fa-arrow-right-long"></i>
+                                          </a>`
+                                      );
+                  }
+                  else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                      $("#searchresultarea").html(resultText);
+                      $("#viewall").html("");
+                  }
+                  else{
+                      $("#searchresultarea").html("");
+                      $("#viewall").html("");
+                  }
+              },
+              error: function(res){
+                  $("searchresultarea").text(res);
+
+              },
+          });
+      });
+</script>
+<script>
+    $("#products").on('click', '.removingItem', function(){
+        var orderitemid = $(this).parent().parent().children().first().html();
+        var parent = $(this).parent().parent().parent();
+        var parentProducts = $(this).parent().parent().parent().parent();
+        $.ajax({
+            type: 'GET',
+            data: {
+                orderitemid: orderitemid,
+            },
+            beforeSend: function(){
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleting...</div>");
+            },
+            success: function(data){
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount--;
+                subtotalFloatPrice -= data["productprice"] * data["orderitemquantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleted <i class='fa-solid fa-check'></i></div>");
+                setTimeout(function(){
+                    parent.remove();
+                    if($("#products").has("div")){
+                        $("").insertAfter(".basketTxt-closeIcon");
+                    }
+                    else{
+                        $(`<div class="emptyBasket" id="emptybasket">
+                            <div class="emptybasketIcon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <p>Your basket is empty</p>
+                            <div class="returnBtn">
+                                <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                            </div>
+                        </div>`).insertAfter(".basketTxt-closeIcon");
+                    }
+                }, 2000);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    parent.html(`<div class='products my-5' style='margin:auto; width:70px;'>Error ${ res.status }!</div>`);
+                }, 2000);
+            },
+        });
+    });
+</script>
+<script>
+    function validateEmail($email) {
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        return emailReg.test( $email );
+    }
+    function validatePhone(txtPhone) {
+        var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+        if (filter.test(txtPhone)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    $(".contactButton").on('click', function(e){
+        e.preventDefault();
+        var name = $("#contactName").val();
+        var email = $("#contactMail").val();
+        var tel = $("#contactTel").val();
+        var message = $("#contactTextArea").val();
+        var thisbutton = $(this);
+
+        if(message == ""){
+            $("#contactTextArea").css("border-color", "red");
+            $("#messageError").html("Please, enter your message.");
+            $("#contactTextArea").focus();
+        }
+        else if(message != ""){
+            $("#contactTextArea").css("border-color", "green");
+            $("#messageError").html("");
+        }
+        if(tel == "" || !validatePhone(tel)){
+            $("#contactTel").css("border-color", "red");
+            $("#telError").html("Please, enter your tel.");
+            $("#contactTel").focus();
+        }
+        else if(tel != "" && validatePhone(tel)){
+            $("#contactTel").css("border-color", "green");
+            $("#telError").html("");
+        }
+        if(email == "" || !validateEmail(email)){
+            $("#contactMail").css("border-color", "red");
+            $("#mailError").html("Please, enter your email.");
+            $("#contactMail").focus();
+        }
+        else if(email != "" && validateEmail(email)){
+            $("#contactMail").css("border-color", "green");
+            $("#mailError").html("");
+        }
+        if(name == ""){
+            $("#contactName").css("border-color", "red");
+            $("#nameError").html("Please, enter your name.");
+            $("#contactName").focus();
+        }
+        else if(name != ""){
+            $("#contactName").css("border-color", "green");
+            $("#nameError").html("");
+        }
+        if(name != "" && email != "" && tel != "" && message != ""){
+
+        $.ajax({
+            type: "POST",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: "message",
+                name: name,
+                email: email,
+                tel: tel,
+                message: message,
+            },
+            beforeSend: function(){
+                thisbutton.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                thisbutton.attr("disabled", "disabled");
+            },
+            success: function(data){
+                thisbutton.html(`<i class='fa-solid fa-check'></i>`);
+                setTimeout(function(){
+                    thisbutton.html("Send");
+                    thisbutton.removeAttr("disabled");
+                }, 2000);
+            },
+        });
+
+        }
+    });
+</script>
 {% endblock %}

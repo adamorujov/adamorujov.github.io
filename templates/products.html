@@ -14,15 +14,20 @@
 <!-- Header end -->
 <main>
     <section id="Entrance">
-        <div class="row">
-            <h1>
-                All Shoes
-            </h1>
+        <div class="row productEntranceRow">
+            <div class="productImage-Content">
+                <div
+                    class="productImage"><img src="https://m.media-amazon.com/images/S/aplus-media/vc/932f56fe-0014-43a5-aa27-505cebe9b99d.__CR0,0,1464,600_PT0_SX1464_V1___.jpg" alt=""></div>
+                <div class="productContent">
+                    <span>{{ toptitle }}</span>
+                </div>
+            </div>
         </div>
     </section>
+    {% if products %}
     <section id="filter">
         <div class="container">
-            <a id="filterIcon" href=""><i class="fa-solid fa-filter"></i>Filter</a>
+            <a id="filterIcon" style="cursor:pointer;"><i class="fa-solid fa-filter"></i>Filter</a>
             <div class="row myRow">
                <form id="filterForm">
                 <div class="byPrice col-lg-4 col-md-6 col-sm-12">
@@ -62,6 +67,7 @@
             </div>
         </div>
     </section>
+    {% endif %}
     <section id="products">
         <div class="container" id="productsContainer">
             <div class="row" id="productsrow">
@@ -69,39 +75,54 @@
                 <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="image">
                         <div class="d-none">{{ product.id }}</div>
-                        <a class="mainImage" href="">
-                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                        <a class="mainImage" href="{% url 'shop:detail' product.id %}">
+                            <img src="{{ product.productimages.first.image.url }}"
                                 alt="{{ product.name }}">
                             <div class="icons">
-                                <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                {% if request.user.is_authenticated %}
+                                {% if product in wishlistproducts %}
+                                <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                {% else %}
+                                <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                {% endif %}
+                                {% else %}
+                                <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                {% endif %}
                             </div>
 
                         </a>
-                        <a class="secondImage" href="">
-                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                        <a class="secondImage" href="{% url 'shop:detail' product.id %}">
+                            <img src="{{ product.productimages.last.image.url }}"
                                 alt="">
                         </a>
+                        {% if request.user.is_authenticated %}
                         <div class="addToCard">
                                             
-                            <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                         </div>
+                        {% else %}
+                        <div class="addToCard">
+                                            
+                            <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="name-price">
-                        <div class="name"><a href="">{{ product.name }}</a></div>
+                        <div class="name"><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></div>
                         <div class="price">£{{ product.price }}</div>
                     </div>
                     <div class="bg-modal d-none">
                         <div class="productModal animate__animated d-none">
                             <div class="image-name-price">
                                 <div class="modalImage">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    <img src="{{ product.productimages.first.image.url }}" alt="">
                                 </div>
                                 <div class="modalname-price">
                                     <div class="modalName d-none">
                                         <a href="">{{ product.id }}</a>
                                     </div>
                                     <div class="modalName">
-                                        <a href="">{{ product.name }}</a>
+                                        <a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a>
                                     </div>
                                     <div class="modalPrice">
                                         ${{ product.price }}
@@ -147,7 +168,7 @@
                                 </div>
                             </div>
                             <div class="modalViewFullDetails">
-                                <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                <a href="{% url 'shop:detail' product.id %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                             </div>
                             <div class="modalClose">
                                 <i class="las la-times"></i>
@@ -156,7 +177,9 @@
                     </div>
                 </div>
                 {% empty %}
-                <p>Not found any product.</p>
+                <div class="mt-5">
+                    <p>Not found any product.</p>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -238,14 +261,15 @@
             type : 'POST',
             data : {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: "addtocard",
                 productid: productid,
                 color: colorval,
                 size: sizeval,
                 count: count,
             },
-            //url: "",
             beforeSend: function(){
                 $(".modalAddCard").html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                $(".modalAddCard").attr("disabled", "disabled");
             },
             success: function(data){
                 if($("#emptybasket").hasClass("d-none")){
@@ -290,6 +314,7 @@
                 $(".modalAddCard").html("<i class='fa-solid fa-check'></i>");
                 setTimeout(function(){
                     $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
                 }, 1500);
             },
             error: function(res){
@@ -350,9 +375,9 @@
     });
 
     $(".wishlist").on('click', function(){
-        var wishlistitem = $(this);
-        var wishlistcount = $("#wishlistcount");
         var productid = $(this).parent().parent().children().first().html();
+        var wishlistitem = $(".wish"+productid);
+        var wishlistcount = $("#wishlistcount");
         $.ajax({
             type: 'POST',
             data: {
@@ -364,14 +389,8 @@
                 wishlistitem.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
             },
             success: function(data){
-                if(data["wishlistcount"]){
-                    wishlistitem.html("<i class='bi-heart-fill whishListBackground'></i>");
-                    wishlistcount.html(`${ data["wishlistcount"] }`);
-                }
-                else{
-                    wishlistitem.html("<i class='bi bi-heart'></i>");
-                    alert(data["warning"]);
-                }
+                wishlistcount.html(data["wishlistcount"]);
+                wishlistitem.html(`<i class='${ data["stat"] }'></i>`);
             },
         });
     });
@@ -390,7 +409,6 @@
                 maxprice: maxPrice,
             },
             beforeSend: function(){
-                //$(".smallImage").html('<div class="my-5 spinner-border spinner-border-sm" style="position:absolute; top:50%; left:50%; transform:translate(-50% -50%);" role="status" style="margin:auto;"><span class="sr-only">Loading...</span></div>');
                 productsRow.html(`
                 <div class="my-5 text-center">
                     <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -398,6 +416,7 @@
                     </div>
                 </div>
                 `);
+                button.attr("disabled", "disabled");
             },
             success: function(data){
                 productsRow.html("");
@@ -495,6 +514,7 @@
                     </div>
                     `);
                 }
+                button.removeAttr("disabled");
             },
         });
     });

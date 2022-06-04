@@ -7,6 +7,5 @@ urlpatterns = [
     path('detail/<int:id>/', views.DetailView.as_view(), name="detail"),
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('wishlist/', views.WishlistView.as_view(), name="wishlist"),
-    path('checkout/', views.checkout, name="checkout"),
-    path('removeorderitem/<int:id>/', views.removeOrderItem, name="removeorderitem"),
+    path('checkout/', views.CheckoutView.as_view(), name="checkout"),
 ]

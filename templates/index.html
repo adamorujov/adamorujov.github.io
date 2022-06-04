@@ -21,45 +21,53 @@
                     <span class="closeIcon"><i class="las la-times"></i></span>
                 </div>
                 <ul class="menuLinks">
-                    <li><a href="">Home</a></li>
-                    <li class="menuShopLi"><a href="">Shop</a>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li class="menuShopLi"><a>Shop</a>
                         <ul class="menuShopUl">
                             {% for shop in shops %}
-                            <li><a href="">{{ shop.name }}</a></li>
+                            <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
                             {% empty %}
-                            Empty
+                            <li>No shop yet.</li>
                             {% endfor %}
                         </ul>
                     </li>
-                    <li class="menuProductsLi"><a href="">Products</a>
+                    <li class="menuProductsLi"><a>Products</a>
                         <ul class="menuProductsUl">
+                            <li><a href="{% url 'shop:products' %}">All products</a></li>
                             {% for category in categories %}
-                            <li><a href="">{{ category.name }}</a></li>
+                            <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
-                    <li><a href="">Man</a></li>
-                    <li><a href="">Woman</a></li>
-                    <li><a href="">Kid</a></li>
-                    <li><a href="">Contact</a></li>
-                    <li><a href="#" class="searchIcon">
+                    <li><a href="{% url 'shop:products' %}?gender=Men">Man</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Women">Woman</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Kid">Kid</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Unisex">Unisex</a></li>
+                    <li><a href="{% url 'shop:contact' %}">Contact</a></li>
+                    <li><a href="" class="searchIcon">
                             <i class="bi bi-search nav-search"></i>
                             <span>Search</span>
                         </a>
                     </li>
-                    <li><a class="userIcon" href="#">
-                            <i class="bi bi-person nav-user"></i>
-                            <span>Login/Register</span>
-                        </a>
-                    </li>
-                    <li><a href="#" class="wishlist">
+                    {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'shop:wishlist' %}" class="wishlist">
                             <i class="bi bi-heart nav-wishlist"></i>
                             <span>Whishlist</span>
                         </a>
                     </li>
-                    <li><a href="#" class="basket">
+                    <li><a href="" class="basket">
                             <i class="bi bi-cart2 nav-basket"></i>
                             <span>Basket</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li><a class="userIcon" href="#">
+                        <i class="bi bi-person nav-user"></i>
+                        {% if request.user.is_authenticated %}
+                        <span><a href="{% url 'customer:logout' %}">Logout</a></span>
+                        {% else %}
+                        <span>Login/Register</span>
+                        {% endif %}
                         </a>
                     </li>
                 </ul>
@@ -68,52 +76,70 @@
                 <div class="nav-links col-lg-5  col-md-1 col-sm-2 col-xs-4">
                     <i class="fa-solid fa-bars menuIcon mx-2"></i>
                     <ul class="navLinkElements">
-                        <li><a href="">Home</a></li>
-                        <li class="shopLi"><a href="">Shop</a>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li class="shopLi"><a style="cursor:pointer;">Shop</a>
                             <div class="shop">
                                 <ul class="shopElements">
                                     {% for shop in shops %}
-                                    <li><a href="">{{ shop.name }}</a></li>
+                                    <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
+                                    {% empty %}
+                                    <li>No shop yet.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </li>
-                        <li class="productsLi"><a href="">Products</a>
+                        <li class="productsLi"><a style="cursor:pointer;">Products</a>
                             <div class="products">
                                 <ul class="productElements">
+                                    <li><a href="{% url 'shop:products' %}">All products</a></li>
                                     {% for category in categories %}
-                                    <li><a href="">All products</a></li>
+                                    <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
+                                    {% empty %}
+                                    <li>No category yet.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="">Man</a></li>
-                        <li><a href="">Woman</a></li>
-                        <li><a href="">Kid</a></li>
-                        <li><a href="">Contact</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Men">Man</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Women">Woman</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Kid">Kid</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Unisex">Unisex</a></li>
+                        <li><a href="{% url 'shop:contact' %}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="logo col-lg-3 col-md-7 col-sm-5 col-xs-12">
-                    <a href="">
-                        <img src="../static/images/Logo-img_38c63be0-fb31-4328-b860-cedd88ea4232_225x.webp"
+                    <a href="{% url 'index' %}">
+                        <img src="{{ settings.page_logo.url }}"
                             alt="logo">
                     </a>
                 </div>
                 <div class="icons col-lg-4  col-md-4 col-sm-5 col-xs-6">
-                    <a class="searchIcon" href="#">
+                    <a class="searchIcon" href="">
                         <i class="bi bi-search nav-search"></i>
                     </a>
-                    <a class="userIcon" href="#">
+                    <div class="userIcon">
                         <i class="bi bi-person nav-user"></i>
-                    </a>
-                    <a href="#" class="wishlist">
+                        <div class="userLoginStatus">
+                            <ul class="userLoginStatusUl">
+                                {% if request.user.is_authenticated %}
+                                <li><a>{{ request.user.get_full_name }}</a></li>
+                                <li><a href="{% url 'customer:logout' %}">Logout</a></li>
+                                {% else %}
+                                <li><a href="{% url 'customer:login' %}">Login/Register</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'shop:wishlist' %}" class="wishlist">
                         <i class="bi bi-heart nav-wishlist"></i>
-                        <span class="wishlistCount" id="wishlistcount">{{ wishlist_number }}</span>
+                        <span class="wishlistCount" id="wishlistcount">{{ wishlistitems | length }}</span>
                     </a>
-                    <a href="#" class="basket">
+                    <a href="" class="basket">
                         <i class="bi bi-cart2 nav-basket"></i>
                         <span class="basketCount" id="basketcount">{{ orderitems | length }}</span>
                     </a>
+                    
                 </div>
             </div>
             <div class="searchArea animate__animated">
@@ -122,7 +148,7 @@
                     <span class="searchCloseIcon"><i class="las la-times"></i></span>
                 </div>
                 <div class="searchInputArea">
-                    <form action="post">
+                    <form method="post">
                         <input class="searchInput" id="searchinput" type="search" autocomplete="off" placeholder="Search for products">
                     </form>
                 </div>
@@ -135,29 +161,41 @@
                     <span class="basketCloseIcon"><i class="las la-times"></i></span>
                 </div>
                 {% if not orderitems %}
+                {% if request.user.is_authenticated %}
                 <div class="emptyBasket" id="emptybasket">
                     <div class="emptybasketIcon">
                         <i class="bi bi-cart-x"></i>
                     </div>
                     <p>Your basket is empty</p>
                     <div class="returnBtn">
-                        <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                        <a class="basketToShopBtn" href="{% url 'shop:products' %}">RETURN TO SHOP</a>
                     </div>
                 </div>
+                {% else %}
+                <div class="emptyBasket" id="emptybasket">
+                    <div class="emptybasketIcon">
+                        <i class="bi bi-cart-x"></i>
+                    </div>
+                    <p>You have to login for shopping </p>
+                    <div class="returnBtn">
+                        <a class="basketToShopBtn" href="{% url 'customer:login' %}">LOGIN FOR SHOPPING</a>
+                    </div>
+                </div>
+                {% endif %}
                 {% endif %}
                 <div class="basketProductsArea" id="basketproductsarea">
                     <div class="products" id="products">
                         {% for orderitem in orderitems %}
                         <div class="basketProduct">
                             <div class="basketProductImage">
-                                <a href="">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                                <a href="{% url 'shop:detail' orderitem.product.id %}">
+                                    <img src="{{ orderitem.product.productimages.first.image.url }}" alt="{{ orderitem.product.name }}">
                                 </a>
                             </div>
                             <div class="basketContent">
                                 <div class="d-none">{{ orderitem.id }}</div>
                                 <div class="productName">
-                                    <a href="">
+                                    <a href="{% url 'shop:detail' orderitem.product.id %}">
                                         {{ orderitem.product.name }} (<span>{{ orderitem.size }}/{{ orderitem.color }}</span>) x {{ orderitem.quantity }}
                                     </a>
                                 </div>
@@ -171,6 +209,7 @@
                         </div>
                         {% endfor %}
                     </div>
+                    {% if request.user.is_authenticated %}
                     <div class="subtotal">
                         <div class="title">
                             <span class="subtotalTitle">Subtotal</span>
@@ -180,11 +219,12 @@
                             <p>Taxes, shipping and discounts codes calculated at checkout</p>
                         </div>
                         <div class="checkoutBtn">
-                            <a class="mycheckoutBtn" href="">
+                            <a class="mycheckoutBtn" href="{% url 'shop:checkout' %}">
                                 CHECK OUT
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -231,7 +271,7 @@
                                 <p>Best Seller Items</p>
                             </div>
                             <div class="allproductsText">
-                                <a href="">
+                                <a href="{% url 'shop:products' %}">
                                     VIEW ALL PRODUCTS
                                 </a>
                             </div>
@@ -242,7 +282,7 @@
                             <div class="bigImage">
                                 <div
                                     class="image">
-                                    <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Product-Banner-1_720x.jpg?v=1604995599">
+                                    <img alt="{{ settings.first_field_title }}" src="{{ settings.first_field_image.url }}">
                                 </div>
                                 <div class="content">
                                     <div class="discount">{{ settings.first_field_description }}</div>
@@ -256,39 +296,54 @@
                             <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
                                     <div class="d-none">{{ product.id }}</div>
-                                    <a class="mainImage" href="">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                    <a class="mainImage" href="{% url 'shop:detail' product.id %}">
+                                        <img src="{{ product.productimages.first.image.url }}"
                                             alt="{{ product.name }}">
                                         <div class="icons">
-                                            <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                            {% if request.user.is_authenticated %}
+                                            {% if product in wishlistproducts %}
+                                            <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                            {% else %}
+                                            <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                            {% endif %}
+                                            {% else %}
+                                            <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                            {% endif %}
                                         </div>
 
                                     </a>
-                                    <a class="secondImage" href="">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
-                                            alt="">
+                                    <a class="secondImage" href="{% url 'shop:detail' product.id %}">
+                                        <img src="{{ product.productimages.last.image.url }}"
+                                            alt="{{ settings.first_field_title }}">
                                     </a>
+                                    {% if request.user.is_authenticated %}
                                     <div class="addToCard">
                                             
-                                        <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                        <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                                     </div>
+                                    {% else %}
+                                    <div class="addToCard">
+                                            
+                                        <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="name-price">
-                                    <div class="name"><a href="">{{ product.name }}</a></div>
+                                    <div class="name"><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></div>
                                     <div class="price">${{ product.price }}</div>
                                 </div>
                                 <div class="bg-modal d-none">
                                     <div class="productModal animate__animated d-none">
                                         <div class="image-name-price">
                                             <div class="modalImage">
-                                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                                <img src="{{ product.productimages.first.image.url }}" alt="">
                                             </div>
                                             <div class="modalname-price">
                                                 <div class="modalName d-none">
                                                     <a href="">{{ product.id }}</a>
                                                 </div>
                                                 <div class="modalName">
-                                                    <a href="">{{ product.name }}</a>
+                                                    <a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a>
                                                 </div>
                                                 <div class="modalPrice">
                                                     ${{ product.price }}
@@ -334,7 +389,7 @@
                                             </div>
                                         </div>
                                         <div class="modalViewFullDetails">
-                                            <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                            <a href="{% url 'shop:detail' product.id %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                                         </div>
                                         <div class="modalClose">
                                             <i class="las la-times"></i>
@@ -354,7 +409,7 @@
             <div class="image-content">
                 <div
                     class="image"><a href="">
-                        <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Sub-Banner_0bbcd124-38e5-4d3e-b1dc-27f636a375cf_1950x.jpg?v=1604993439"></a>
+                        <img alt="{{ settings.trending_title }}" src="{{ settings.trending_image.url }}"></a>
                 </div>
                 <div class="content">
                     <div class="collectionNo">
@@ -363,7 +418,7 @@
                     <div class="arrivalStatus">
                         <p>{{ settings.trending_title }}</p>
                     </div>
-                    <a class="collection" href="">{{ settings.trending_link_name }}</a>
+                    <a class="collection" href="{{ settings.trending_link }}">{{ settings.trending_link_name }}</a>
                 </div>
             </div>
         </div>
@@ -377,7 +432,7 @@
                         <p>Featured Products</p>
                     </div>
                     <div class="seeAllProducts">
-                        <a href="">VIEW ALL PRODUCTS</a>
+                        <a href="{% url 'shop:products' %}">VIEW ALL PRODUCTS</a>
                     </div>
                 </div>
                 <div class="slider">
@@ -386,39 +441,54 @@
                         <div class="smallImage">
                             <div class="image">
                                 <div class="d-none">{{ product.id }}</div>
-                                <a class="mainImage" href="">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                <a class="mainImage" href="{% url 'shop:detail' product.id %}">
+                                    <img src="{{ product.productimages.first.image.url }}"
                                         alt="{{ product.name }}">
-                                    <div class="icons">
-                                        <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
-                                    </div>
+                                        <div class="icons">
+                                            {% if request.user.is_authenticated %}
+                                            {% if product in wishlistproducts %}
+                                            <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                            {% else %}
+                                            <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                            {% endif %}
+                                            {% else %}
+                                            <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                            {% endif %}
+                                        </div>
 
                                 </a>
-                                <a class="secondImage" href="">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                <a class="secondImage" href="{% url 'shop:detail' product.id %}">
+                                    <img src="{{ product.productimages.last.image.url }}"
                                         alt="">
                                 </a>
+                                {% if request.user.is_authenticated %}
                                 <div class="addToCard">
                                             
-                                    <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                    <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                                 </div>
+                                {% else %}
+                                <div class="addToCard">
+                                            
+                                    <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                </div>
+                                {% endif %}
                             </div>
                             <div class="name-price">
-                                <div class="name"><a href="">{{ product.name }}</a></div>
+                                <div class="name"><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></div>
                                 <div class="price">£{{ product.price }}</div>
                             </div>
                             <div class="bg-modal d-none">
                                 <div class="productModal animate__animated d-none">
                                     <div class="image-name-price">
                                         <div class="modalImage">
-                                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                            <img src="{{ product.productimages.first.image.url }}" alt="">
                                         </div>
                                         <div class="modalname-price">
                                             <div class="modalName d-none">
                                                 <a href="">{{ product.id }}</a>
                                             </div>
                                             <div class="modalName">
-                                                <a href="">{{ product.name }}</a>
+                                                <a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a>
                                             </div>
                                             <div class="modalPrice">
                                                 ${{ product.price }}
@@ -464,7 +534,7 @@
                                         </div>
                                     </div>
                                     <div class="modalViewFullDetails">
-                                        <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                        <a href="{% url 'shop:products' %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                                     </div>
                                     <div class="modalClose">
                                         <i class="las la-times"></i>
@@ -493,15 +563,12 @@
                 {% for shop in shops %}
                 <div class="brand animate__animated">
                     {% if shop.logo %}
-                    <a href=""><img src="{{ shop.logo.url }}" alt="{{ shop.name }}"></a>
+                    <a href="{% url 'shop:products' %}"><img src="{{ shop.logo.url }}" alt="{{ shop.name }}"></a>
                     {% else %}
-                    <a href=""><img src="https://t3.ftcdn.net/jpg/03/15/06/10/360_F_315061039_JPz3A8Yd64Ugsy2T6Ez6E9IPwAhs3ftD.jpg" alt="{{ shop.name }}"></a>
+                    <a href="{% url 'shop:products' %}"><img src="https://t3.ftcdn.net/jpg/03/15/06/10/360_F_315061039_JPz3A8Yd64Ugsy2T6Ez6E9IPwAhs3ftD.jpg" alt="{{ shop.name }}"></a>
                     {% endif %}
                 </div>
                 {% endfor %}
-                <div class="brand animate__animated">
-                    <a href=""><img src="../static/images/brandPuma.webp" alt=""></a>
-                </div>
             </div>
         </div>
     </section>
@@ -510,7 +577,7 @@
         <div class="row">
             <div class="image-content">
                 <div
-                    class="image"><a href=""><img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Parallex_Banner_1950x.jpg?v=1604993321"></a></div>
+                    class="image"><a><img alt="{{ settings.middle_title }}" src="{{ settings.middle_image.url }}"></a></div>
                 <div class="content">
                     <div class="productExplain">
                         <p>{{ settings.middle_description }}</p>
@@ -518,7 +585,7 @@
                     <div class="shoeStatus">
                         <p>{{ settings.middle_title }}</p>
                     </div>
-                    <a class="exploreMore" href="">{{ settings.middle_link_name }}</a>
+                    <a class="exploreMore" href="{{ settings.middle_link }}">{{ settings.middle_link_name }}</a>
                 </div>
             </div>
         </div>
@@ -533,7 +600,7 @@
                                 <p>Best Seller Items</p>
                             </div>
                             <div class="allproductsText">
-                                <a href="">
+                                <a href="{% url 'shop:products' %}">
                                     VIEW ALL PRODUCTS
                                 </a>
                             </div>
@@ -545,39 +612,54 @@
                             <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
                                     <div class="d-none">{{ product.id }}</div>
-                                    <a class="mainImage" href="">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
+                                    <a class="mainImage" href="{% url 'shop:detail' product.id %}">
+                                        <img src="{{ product.productimages.first.image.url }}"
                                             alt="{{ product.name }}">
-                                        <div class="icons">
-                                            <a class="wishlist" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
-                                        </div>
+                                            <div class="icons">
+                                                {% if request.user.is_authenticated %}
+                                                {% if product in wishlistproducts %}
+                                                <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
+                                                {% else %}
+                                                <a class="wishlist wish{{ product.id }}" style="cursor:pointer;"><i class="bi bi-heart"></i></a>
+                                                {% endif %}
+                                                {% else %}
+                                                <a class="wishlist" href="{% url 'customer:login' %}"><i class="bi bi-heart"></i></a>
+                                                {% endif %}
+                                            </div>
 
                                     </a>
-                                    <a class="secondImage" href="">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                                    <a class="secondImage" href="{% url 'shop:detail' product.id %}">
+                                        <img src="{{ product.productimages.last.image.url }}"
                                             alt="">
                                     </a>
+                                    {% if request.user.is_authenticated %}
                                     <div class="addToCard">
                                             
-                                        <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                        <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                                     </div>
+                                    {% else %}
+                                    <div class="addToCard">
+                                            
+                                        <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="name-price">
-                                    <div class="name"><a href="">{{ product.name }}</a></div>
+                                    <div class="name"><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></div>
                                     <div class="price">${{ product.price }}</div>
                                 </div>
                                 <div class="bg-modal d-none">
                                     <div class="productModal animate__animated d-none">
                                         <div class="image-name-price">
                                             <div class="modalImage">
-                                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                                <img src="{{ product.productimages.first.image.url }}" alt="">
                                             </div>
                                             <div class="modalname-price">
                                                 <div class="modalName d-none">
                                                     <a href="">{{ product.id }}</a>
                                                 </div>
                                                 <div class="modalName">
-                                                    <a href="">{{ product.name }}</a>
+                                                    <a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a>
                                                 </div>
                                                 <div class="modalPrice">
                                                     ${{ product.price }}
@@ -623,7 +705,7 @@
                                             </div>
                                         </div>
                                         <div class="modalViewFullDetails">
-                                            <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                            <a href="{% url 'shop:products' %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                                         </div>
                                         <div class="modalClose">
                                             <i class="las la-times"></i>
@@ -637,12 +719,12 @@
                             <div class="bigImage">
                                 <div style="background-image: url();"
                                     class="image">
-                                    <img alt="" src="https://cdn.shopify.com/s/files/1/1385/4931/files/Product-Banner-2_720x.jpg?v=1604997520">
+                                    <img alt="{{ settings.last_field_title }}" src="{{ settings.last_field_image.url }}">
                                 </div>
                                 <div class="content">
                                     <div class="discount">{{ settings.last_field_description }}</div>
                                     <div class="saleStatus">{{ settings.last_field_title }}</div>
-                                    <a class="goToProducts" href="">{{ settings.last_field_link_name }}</a>
+                                    <a class="goToProducts" href="{{ settings.last_field_link }}">{{ settings.last_field_link_name }}</a>
                                 </div>
                             </div>
                         </div>
@@ -746,12 +828,11 @@
         var colorval = $(this).parent().parent().prev().prev().children().first().children().last().children().first().html();
         var sizeval = $(this).parent().parent().prev().children().first().children().last().children().first().html();
         var count = $(this).parent().parent().children().first().children().next().html();
-        var button = $(this);
         $.ajax({
             type : 'POST',
             data : {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
-                choice: 'addtocard',
+                choice: "addtocard",
                 productid: productid,
                 color: colorval,
                 size: sizeval,
@@ -759,8 +840,8 @@
             },
             //url: "",
             beforeSend: function(){
-                button.prop('disabled', true);
                 $(".modalAddCard").html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                $(".modalAddCard").attr("disabled", "disabled");
             },
             success: function(data){
                 if($("#emptybasket").hasClass("d-none")){
@@ -787,7 +868,7 @@
                                 $${ data["productprice"] }
                             </span>
                             <div class="removeItem">
-                                <a href='/removeorderitem/${ data["orderitemid"] }/' class="removingItem"><i class="bi bi-trash"></i></span>
+                                <span class="removingItem"><i class="bi bi-trash"></i></span>
                             </div>
                         </div>
                     </div>
@@ -802,19 +883,20 @@
                 $(".modalAddCard").html("<i class='fa-solid fa-check'></i>");
                 setTimeout(function(){
                     $(".modalAddCard").html("ADD TO CARD");
-                    button.prop('disabled', false);
+                    $(".modalAddCard").removeAttr("disabled");
                 }, 1500);
             },
             error: function(res){
                 alert("Error " + res.status);
                 setTimeout(function(){
                     $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
                 }, 1500);
             },
         });
     });
 
-    $(".removingItem").on('click', function(){
+    $("#products").on('click', '.removingItem', function(){
         var orderitemid = $(this).parent().parent().children().first().html();
         var parent = $(this).parent().parent().parent();
         var parentProducts = $(this).parent().parent().parent().parent();
@@ -838,10 +920,18 @@
                 setTimeout(function(){
                     parent.remove();
                     if($("#products").has("div")){
-                        $("#emptybasket").removeClass("");
+                        $("").insertAfter(".basketTxt-closeIcon");
                     }
                     else{
-                        $("#emptybasket").removeClass("d-none");
+                        $(`<div class="emptyBasket" id="emptybasket">
+                            <div class="emptybasketIcon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <p>Your basket is empty</p>
+                            <div class="returnBtn">
+                                <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                            </div>
+                        </div>`).insertAfter(".basketTxt-closeIcon");
                     }
                 }, 2000);
             },
@@ -855,9 +945,9 @@
     });
 
     $(".wishlist").on('click', function(){
-        var wishlistitem = $(this);
-        var wishlistcount = $("#wishlistcount");
         var productid = $(this).parent().parent().children().first().html();
+        var wishlistitem = $(".wish"+productid);
+        var wishlistcount = $("#wishlistcount");
         $.ajax({
             type: 'POST',
             data: {
@@ -869,16 +959,11 @@
                 wishlistitem.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
             },
             success: function(data){
-                if(data["wishlistcount"]){
-                    wishlistitem.html("<i class='bi-heart-fill whishListBackground'></i>");
-                    wishlistcount.html(`${ data["wishlistcount"] }`);
-                }
-                else{
-                    wishlistitem.html("<i class='bi bi-heart'></i>");
-                    alert(data["warning"]);
-                }
+                wishlistcount.html(data["wishlistcount"]);
+                wishlistitem.html(`<i class='${ data["stat"] }'></i>`);
             },
         });
     });
+
 </script>
 {% endblock %}

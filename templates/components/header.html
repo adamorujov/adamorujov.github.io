@@ -8,47 +8,55 @@
                     <span class="closeIcon"><i class="las la-times"></i></span>
                 </div>
                 <ul class="menuLinks">
-                    <li><a href="">Home</a></li>
-                    <li class="menuShopLi"><a href="">Shop</a>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li class="menuShopLi"><a>Shop</a>
                         <ul class="menuShopUl">
                             {% for shop in shops %}
-                            <li><a href="">{{ shop.name }}</a></li>
+                            <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
                             {% empty %}
                             <li>No shop yet.</li>
                             {% endfor %}
                         </ul>
                     </li>
-                    <li class="menuProductsLi"><a href="">Products</a>
+                    <li class="menuProductsLi"><a>Products</a>
                         <ul class="menuProductsUl">
+                            <li><a href="{% url 'shop:products' %}">All products</a></li>
                             {% for category in categories %}
-                            <li><a href="">{{ category.name }}</a></li>
+                            <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
                             {% empty %}
                             <li>No category yet.</li>
                             {% endfor %}
                         </ul>
                     </li>
-                    <li><a href="">Man</a></li>
-                    <li><a href="">Woman</a></li>
-                    <li><a href="">Kid</a></li>
-                    <li><a href="">Contact</a></li>
-                    <li><a class="searchIcon" href="#">
+                    <li><a href="{% url 'shop:products' %}?gender=Men">Man</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Women">Woman</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Kid">Kid</a></li>
+                    <li><a href="{% url 'shop:products' %}?gender=Unisex">Unisex</a></li>
+                    <li><a href="{% url 'shop:contact' %}">Contact</a></li>
+                    <li><a class="searchIcon" href="">
                             <i class="bi bi-search nav-search"></i>
                             <span>Search</span>
                         </a>
                     </li>
-                    <li><a class="userIcon" href="#">
-                            <i class="bi bi-person nav-user"></i>
-                            <span>Login/Register</span>
-                        </a>
-                    </li>
-                    <li><a href="#" class="wishlist">
+                    {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'shop:wishlist' %}" class="wishlist">
                             <i class="bi bi-heart nav-wishlist"></i>
                             <span>Whishlist</span>
                         </a>
                     </li>
-                    <li><a href="#" class="basket">
+                    <li><a href="" class="basket">
                             <i class="bi bi-cart2 nav-basket"></i>
                             <span>Basket</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li><a class="userIcon" href="#">
+                        <i class="bi bi-person nav-user"></i>
+                        {% if request.user.is_authenticated %}
+                        <span><a href="{% url 'customer:logout' %}">Logout</a></span>
+                        {% else %}
+                        <span>Login/Register</span>
+                        {% endif %}
                         </a>
                     </li>
                 </ul>
@@ -57,60 +65,65 @@
                 <div class="nav-links col-lg-5  col-md-1 col-sm-2 col-xs-4">
                     <i class="fa-solid fa-bars menuIcon"></i>
                     <ul class="navLinkElements">
-                        <li><a href="">Home</a></li>
-                        <li class="shopLi"><a href="">Shop</a>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li class="shopLi"><a style="cursor:pointer;">Shop</a>
                             <div class="shop">
                                 <ul class="shopElements">
                                     {% for shop in shops %}
-                                    <li><a href="">{{ shop.name }}</a></li>
+                                    <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
                                     {% empty %}
                                     <li>No shop yet.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </li>
-                        <li class="productsLi"><a href="">Products</a>
+                        <li class="productsLi"><a style="cursor:pointer;">Products</a>
                             <div class="products">
                                 <ul class="productElements">
+                                    <li><a href="{% url 'shop:products' %}">All products</a></li>
                                     {% for category in categories %}
-                                    <li><a href="">{{ category.name }}</a></li>
+                                    <li><a href="{% url 'shop:products' %}?category={{ category.name }}">{{ category.name }}</a></li>
                                     {% empty %}
                                     <li>No category yet.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="">Man</a></li>
-                        <li><a href="">Woman</a></li>
-                        <li><a href="">Kid</a></li>
-                        <li><a href="">Contact</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Men">Man</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Women">Woman</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Kid">Kid</a></li>
+                        <li><a href="{% url 'shop:products' %}?gender=Unisex">Unisex</a></li>
+                        <li><a href="{% url 'shop:contact' %}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="logo col-lg-3 col-md-7 col-sm-5 col-xs-12">
-                    <a href="">
-                        <img src="{% static 'images/Logo-img_38c63be0-fb31-4328-b860-cedd88ea4232_225x.webp' %}"
+                    <a href="{% url 'index' %}">
+                        <img src="{{ settings.page_logo.url }}"
                             alt="logo">
                     </a>
                 </div>
                 <div class="icons col-lg-4  col-md-4 col-sm-5 col-xs-6">
-                    <a class="searchIcon" href="#">
+                    <a class="searchIcon" href="">
                         <i class="bi bi-search nav-search"></i>
                     </a>
-                    <div class="userIcon" href="#">
+                    <div class="userIcon">
                         <i class="bi bi-person nav-user"></i>
                         <div class="userLoginStatus">
                             <ul class="userLoginStatusUl">
-                                <li><a href="">{{ request.user.first_name }}</a></li>
-                                <li><a href="">Edit your profile</a></li>
-                                <li><a href="">Logout</a></li>
+                                {% if request.user.is_authenticated %}
+                                <li><a>{{ request.user.get_full_name }}</a></li>
+                                <li><a href="{% url 'customer:logout' %}">Logout</a></li>
+                                {% else %}
+                                <li><a href="{% url 'customer:login' %}">Login/Register</a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
-                    <a href="#" class="wishlist">
+                    <a href="{% url 'shop:wishlist' %}" class="wishlist">
                         <i class="bi bi-heart nav-wishlist"></i>
-                        <span class="wishlistCount" id="wishlistcount">{{ wishlist_number }}</span>
+                        <span class="wishlistCount" id="wishlistcount">{{ wishlistitems | length }}</span>
                     </a>
-                    <a href="#" class="basket">
+                    <a href="" class="basket">
                         <i class="bi bi-cart2 nav-basket"></i>
                         <span class="basketCount" id="basketcount">{{ orderitems | length }}</span>
                     </a>
@@ -135,23 +148,35 @@
                     <span class="basketCloseIcon"><i class="las la-times"></i></span>
                 </div>
                 {% if not orderitems %}
+                {% if request.user.is_authenticated %}
                 <div class="emptyBasket" id="emptybasket">
                     <div class="emptybasketIcon">
                         <i class="bi bi-cart-x"></i>
                     </div>
                     <p>Your basket is empty</p>
                     <div class="returnBtn">
-                        <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                        <a class="basketToShopBtn" href="{% url 'shop:products' %}">RETURN TO SHOP</a>
                     </div>
                 </div>
+                {% else %}
+                <div class="emptyBasket" id="emptybasket">
+                    <div class="emptybasketIcon">
+                        <i class="bi bi-cart-x"></i>
+                    </div>
+                    <p>You have to login for shopping </p>
+                    <div class="returnBtn">
+                        <a class="basketToShopBtn" href="{% url 'customer:login' %}">LOGIN FOR SHOPPING</a>
+                    </div>
+                </div>
+                {% endif %}>
                 {% endif %}
                 <div class="basketProductsArea" id="basketproductsarea">
                     <div class="products" id="products">
                         {% for orderitem in orderitems %}
                         <div class="basketProduct">
                             <div class="basketProductImage">
-                                <a href="">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                                <a href="{% url 'shop:detail' orderitem.product.id %}">
+                                    <img src="{{ orderitem.product.productimages.first.image.url }}" alt="{{ orderitem.product.name }}" alt="">
                                 </a>
                             </div>
                             <div class="basketContent">
@@ -171,6 +196,7 @@
                         </div>
                         {% endfor %}
                     </div>
+                    {% if request.user.is_authenticated %}
                     <div class="subtotal">
                         <div class="title">
                             <span class="subtotalTitle">Subtotal</span>
@@ -180,75 +206,14 @@
                             <p>Taxes, shipping and discounts codes calculated at checkout.</p>
                         </div>
                         <div class="checkoutBtn">
-                            <a class="mycheckoutBtn" href="">
+                            <a class="mycheckoutBtn" href="{% url 'shop:checkout' %}">
                                 CHECK OUT
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </nav>
 </header>
-
-
-<!--<script>
-    $("#searchinput").on('input', function(){
-      $.ajax({
-            type : 'GET',
-            data : {
-                q: $("#searchinput").val(),
-            },
-            //url: "", 
-            success: function(data){
-                var resultText = "";
-                if (data.length == 0){
-                    resultText = "Not found product for your query.";
-                }
-                else{
-                    for (var i=0; i<data.length; i++){
-                        resultText = resultText + `
-                            <div class="serachResult">
-                                <div class="image">
-                                    <a href="">
-                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
-                                    </a>
-                                </div>
-                                <div class="name-price">
-                                    <div class="name">
-                                        <a href="">${data[i].name}</a>
-                                    </div>
-                                    <div class="price">
-                                        <span>
-                                            $${data[i].price}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-                if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
-                    $("#searchresultarea").html(resultText);
-                    $("#viewall").html(`<a href="" class="viewAll">
-                                            View all(${data.length})
-                                            <i class="fa-solid fa-arrow-right-long"></i>
-                                        </a>`
-                                    );
-                }
-                else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
-                    $("#searchresultarea").html(resultText);
-                    $("#viewall").html("");
-                }
-                else{
-                    $("#searchresultarea").html("");
-                    $("#viewall").html("");
-                }
-            },
-            error: function(res){
-                $("searchresultarea").text(res);
-
-            },
-        });
-    });
-</script>-->

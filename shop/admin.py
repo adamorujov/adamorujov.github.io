@@ -16,7 +16,7 @@ class SocialMediaAccountAdmin(admin.TabularInline):
 @admin.register(PageSettings)
 class SettingsAdmin(admin.ModelAdmin):
     fieldsets = (
-        (_("HOME PAGE META DATA"), {'fields': ('home_title', 'home_meta_description', 'home_meta_keywords')}),
+        (_("HOME PAGE META DATA"), {'fields': ('page_logo', 'home_title', 'home_meta_description', 'home_meta_keywords')}),
         (_('PRODUCTS PAGE META DATA'), {'fields': ('products_title', 'products_meta_description', 'products_meta_keywords')}),
         (_('HOME PAGE FIRST BESTSELLER FIELD'), {'fields': ('first_field_image', 'first_field_title', 'first_field_description',
                                        'first_field_link', 'first_field_link_name')}),

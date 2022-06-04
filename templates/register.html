@@ -22,32 +22,111 @@
                             <span class="registerTxt">REGISTER</span>
                         </div>
                         <div class="registerInputArea">
-                            <form id="registerTypeForm" action="post">
+                            {% if messages %}
+                            <ul style="list-style-type:none;" class="messages">
+                                {% for message in messages %}
+                                <li class="alert alert-info"><span>{{ message }}</span></li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <form id="registerTypeForm" method="post">
+                                {% csrf_token %}
+
                                 <label for="regname">Name <span>*</span></label><br>
-                                <input type="text" id="regname"><br><br>
+                                {{ form.first_name }}<br><br>
+
                                 <label for="regsurname">Surname <span>*</span></label><br>
-                                <input type="text" id="regsurname"><br><br>
-                                <label for="regsurname">Username <span>*</span></label><br>
-                                <input type="text" id="regsurname"><br><br>
+                                {{ form.last_name }}<br><br>
+
                                 <label for="regmail">Email <span>*</span></label><br>
-                                <input id="regmail" type="email" ><br><br>
-                                <label for="regmail">Telephone number <span>*</span></label><br>
-                                <input id="regmail" type="email" ><br><br>
-                                <label for="regmail">Age<span>*</span></label><br>
-                                <input id="regmail" type="email" ><br><br>
-                                <label for="regpw">Password <span>*</span></label><br>
-                                <input id="regpw" type="password"><br><br>
-                                <label for="regpw">Confirm password <span>*</span></label><br>
-                                <input id="regpw" type="password"><br><br>
-                                <button type="submit">REGISTER</button>
+                                {{ form.username }}<br><br>
+
+                                <label for="regphone">Telephone number <span>*</span></label><br>
+                                {{ form.phone_number }}<br><br>
+                                
+                                <label for="regpw1">Password <span>*</span></label><br>
+                                {{ form.password1 }}<br><br>
+
+                                <label for="regpw2">Confirm Password <span>*</span></label><br>
+                                {{ form.password2 }}<br><br>
+                                
+                                <button type="submit" id="thissubmitbtn">REGISTER</button>
                             </form>
                         </div>
-                        <p class="logP">Already have an account? <a class="goLogin" href="">Login here</a></p>
+                        <p class="logP">Already have an account? <a class="goLogin" href="{% url 'customer:login' %}">Login here</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
+
+{% endblock %}
+
+{%  block javascript %}
+
+<script>
+    function btnsubmit(){
+        document.getElementById("thissubmitbtn").innerHTML="<i class='fa-solid fa-arrow-rotate-right'></i>";
+    }
+    $("#searchinput").on('input', function(){
+      $.ajax({
+            type : 'GET',
+            data : {
+                q: $("#searchinput").val(),
+            },
+            //url: "", 
+            success: function(data){
+                var resultText = "";
+                if (data.length == 0){
+                    resultText = "Not found product for your query.";
+                }
+                else{
+                    for (var i=0; i<data.length; i++){
+                        resultText = resultText + `
+                            <div class="serachResult">
+                                <div class="image">
+                                    <a href="">
+                                        <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    </a>
+                                </div>
+                                <div class="name-price">
+                                    <div class="name">
+                                        <a href="">${data[i].name}</a>
+                                    </div>
+                                    <div class="price">
+                                        <span>
+                                            $${data[i].price}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html(`<a href="" class="viewAll">
+                                            View all(${data.length})
+                                            <i class="fa-solid fa-arrow-right-long"></i>
+                                        </a>`
+                                    );
+                }
+                else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                    $("#searchresultarea").html(resultText);
+                    $("#viewall").html("");
+                }
+                else{
+                    $("#searchresultarea").html("");
+                    $("#viewall").html("");
+                }
+            },
+            error: function(res){
+                $("searchresultarea").text(res);
+
+            },
+        });
+    });
+</script>
 
 {% endblock %}

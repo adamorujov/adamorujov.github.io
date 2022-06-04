@@ -16,9 +16,15 @@
     <section id="whishlistEntrance">
         <div class="row whishlistRow">
             <div class="whishlistTxt">
+                {% if request.user.is_authenticated %}
                 <span>
                     View your wishlist products
                 </span>
+                {% else %}
+                <span>
+                    You must be login for wishlisting
+                </span>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -29,37 +35,40 @@
                 {% for wishlistitem in wishlistitems %}
                 <div class="smallImage col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="image">
-                        <a class="mainImage" href="">
-                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044"
-                                alt="">
+                        <div class="d-none">{{ wishlistitem.id }}</div>
+                        <a class="mainImage" href="{% url 'shop:detail' wishlistitem.product.id %}">
+                            <img src="{{ wishlistitem.product.productimages.first.image.url}}"
+                                alt="{{ wishlistitem.product.name }}">
                             <div class="icons">
-                                <a href="" class="whishlist"><i class="bi bi-heart"></i></a>
-                                <a href="" class="view"><i class="bi bi-eye"></i></a>
+                                <a class="wishlist" style="cursor:pointer;"><i class="bi-heart-fill whishListBackground"></i></a>
                             </div>
 
                         </a>
-                        <a class="secondImage" href="">
-                            <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/3_f793aa93-354e-4b50-8b86-d2ebe46e30a5_360x.jpg?v=1605080943"
+                        <a class="secondImage" href="{% url 'shop:detail' wishlistitem.product.id %}">
+                            <img src="{{ wishlistitem.product.productimages.last.image.url }}"
                                 alt="">
                         </a>
                         <div class="addToCard">
                                             
-                            <a href="" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                            <a class="toCard modalShowerAddToCard" style="cursor:pointer;">ADD TO CART</a>
                         </div>
                     </div>
                     <div class="name-price">
-                        <div class="name"><a href="">{{ wishlistitem.product.name }}</a></div>
+                        <div class="name"><a href="{% url 'shop:detail' wishlistitem.product.id %}">{{ wishlistitem.product.name }}</a></div>
                         <div class="price">£{{ wishlistitem.product.price }}</div>
                     </div>
                     <div class="bg-modal d-none">
                         <div class="productModal animate__animated d-none">
                             <div class="image-name-price">
                                 <div class="modalImage">
-                                    <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                    <img src="{{ wishlistitem.product.productimages.first.image.url }}" alt="">
                                 </div>
                                 <div class="modalname-price">
+                                    <div class="modalName d-none">
+                                        <a href="">{{ wishlistitem.product.id }}</a>
+                                    </div>
                                     <div class="modalName">
-                                        <a href="">{{ wishlistitem.product.name }}</a>
+                                        <a href="{% url 'shop:detail' wishlistitem.product.id %}">{{ wishlistitem.product.name }}</a>
                                     </div>
                                     <div class="modalPrice">
                                         ${{ wishlistitem.product.price }}
@@ -105,7 +114,7 @@
                                 </div>
                             </div>
                             <div class="modalViewFullDetails">
-                                <a href="">View full details <i class="las la-long-arrow-alt-right"></i></a>
+                                <a href="{% url 'shop:detail' wishlistitem.product.id %}">View full details <i class="las la-long-arrow-alt-right"></i></a>
                             </div>
                             <div class="modalClose">
                                 <i class="las la-times"></i>
@@ -125,20 +134,239 @@
                     <p class="whishlistHeartIcon">
                         <i class="bi bi-heart"></i>
                     </p>
+                    {% if request.user.is_authenticated %}
                     <p class="whishlistStatus">
-                        WHISHLIST IS EMPTY
+                        WISHLIST IS EMPTY
                     </p>
                     <p class="whishlistDesc">
                         You don't have any products in the wishlist yet. <br>
                         You will find a lot of interesting products on our "Shop" page.
                     </p>
                     <div class="returnToShop">
-                    <a class="returnToShopBtn" href="">RETURN TO SHOP</a>
+                        <a class="returnToShopBtn" href="{% url 'index' %}">RETURN TO SHOP</a>
                     </div>
+                    {% else %}
+                    <p class="whishlistStatus">
+                        WISHLIST ITEMS
+                    </p>
+                    <p class="whishlistDesc">
+                        You have not logged in. <br>
+                        Please, login for wishlisting items.
+                    </p>
+                    <div class="returnToShop">
+                        <a class="returnToShopBtn" href="{% url 'customer:login' %}">LOGIN</a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </section>
     {% endif %}
 </main>
+{% endblock %}
+{% block javascript %}
+<script>
+    $("#searchinput").on('input', function(){
+        $.ajax({
+              type : 'GET',
+              data : {
+                  q: $("#searchinput").val(),
+              },
+              //url: "", 
+              success: function(data){
+                  var resultText = "";
+                  if (data.length == 0){
+                      resultText = "Not found product for your query.";
+                  }
+                  else{
+                      for (var i=0; i<data.length; i++){
+                          resultText = resultText + `
+                              <div class="serachResult">
+                                  <div class="image">
+                                      <a href="">
+                                          <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/2_e195f63f-79e4-436a-a065-ee9fb5895c9d_360x.jpg?v=1604995044" alt="">
+                                      </a>
+                                  </div>
+                                  <div class="name-price">
+                                      <div class="name">
+                                          <a href="">${data[i].name}</a>
+                                      </div>
+                                      <div class="price">
+                                          <span>
+                                              $${data[i].price}
+                                          </span>
+                                      </div>
+                                  </div>
+                              </div>
+                          `;
+                      }
+                  }
+                  if($("#searchinput").val() != "" && $("#searchinput").val() != " " && data.length){
+                      $("#searchresultarea").html(resultText);
+                      $("#viewall").html(`<a href="" class="viewAll">
+                                              View all(${data.length})
+                                              <i class="fa-solid fa-arrow-right-long"></i>
+                                          </a>`
+                                      );
+                  }
+                  else if($("#searchinput").val() != "" && $("#searchinput").val() != " " && !data.length){
+                      $("#searchresultarea").html(resultText);
+                      $("#viewall").html("");
+                  }
+                  else{
+                      $("#searchresultarea").html("");
+                      $("#viewall").html("");
+                  }
+              },
+              error: function(res){
+                  $("searchresultarea").text(res);
+
+              },
+          });
+      });
+</script>
+<script>
+    $(".modalAddCard").on('click', function(){
+        var productid = $(this).parent().parent().prev().prev().prev().children().last().children().first().children().first().html();
+        var colorval = $(this).parent().parent().prev().prev().children().first().children().last().children().first().html();
+        var sizeval = $(this).parent().parent().prev().children().first().children().last().children().first().html();
+        var count = $(this).parent().parent().children().first().children().next().html();
+        $.ajax({
+            type : 'POST',
+            data : {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: "addtocard",
+                productid: productid,
+                color: colorval,
+                size: sizeval,
+                count: count,
+            },
+            //url: "",
+            beforeSend: function(){
+                $(".modalAddCard").html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+                $(".modalAddCard").attr("disabled", "disabled");
+            },
+            success: function(data){
+                if($("#emptybasket").hasClass("d-none")){
+                    $("#emptybasket").addClass("");
+                }
+                else{
+                    $("#emptybasket").addClass("d-none");
+                }
+                $("#products").prepend(`
+                    <div class="basketProduct">
+                        <div class="basketProductImage">
+                            <a href="">
+                                <img src="https://cdn.shopify.com/s/files/1/1385/4931/products/9_b244f435-8ba1-4547-ac06-9d5dd5f0a134_360x.jpg?v=1604999525" alt="">
+                            </a>
+                        </div>
+                        <div class="basketContent">
+                            <div class="d-none">${ data["orderitemid"] }</div>
+                            <div class="productName">
+                                <a href="">
+                                    ${ data["productname"] } (<span>${ data["orderitemsize"] }/${ data["orderitemcolor"] }</span>) x ${ data["quantity"] }
+                                </a>
+                            </div>
+                            <span class="productPrice">
+                                $${ data["productprice"] }
+                            </span>
+                            <div class="removeItem">
+                                <span class="removingItem"><i class="bi bi-trash"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount++;
+                subtotalFloatPrice += data["productprice"] * data["quantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                $(".modalAddCard").html("<i class='fa-solid fa-check'></i>");
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
+                }, 1500);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    $(".modalAddCard").html("ADD TO CARD");
+                    $(".modalAddCard").removeAttr("disabled");
+                }, 1500);
+            },
+        });
+    });
+
+    $("#products").on('click', '.removingItem', function(){
+        var orderitemid = $(this).parent().parent().children().first().html();
+        var parent = $(this).parent().parent().parent();
+        var parentProducts = $(this).parent().parent().parent().parent();
+        $.ajax({
+            type: 'GET',
+            data: {
+                orderitemid: orderitemid,
+            },
+            beforeSend: function(){
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleting...</div>");
+            },
+            success: function(data){
+                var basketCount = $("#basketcount").text();
+                var subtotalPrice = $("#subtotalprice").text();
+                var subtotalFloatPrice = parseFloat(subtotalPrice);
+                basketCount--;
+                subtotalFloatPrice -= data["productprice"] * data["orderitemquantity"];
+                $("#basketcount").text(basketCount);
+                $("#subtotalprice").text(subtotalFloatPrice);
+                parent.html("<div class='my-5' style='margin:auto; width:70px;'>Deleted <i class='fa-solid fa-check'></i></div>");
+                setTimeout(function(){
+                    parent.remove();
+                    if($("#products").has("div")){
+                        $("").insertAfter(".basketTxt-closeIcon");
+                    }
+                    else{
+                        $(`<div class="emptyBasket" id="emptybasket">
+                            <div class="emptybasketIcon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <p>Your basket is empty</p>
+                            <div class="returnBtn">
+                                <a class="basketToShopBtn" href="">RETURN TO SHOP</a>
+                            </div>
+                        </div>`).insertAfter(".basketTxt-closeIcon");
+                    }
+                }, 2000);
+            },
+            error: function(res){
+                alert("Error " + res.status);
+                setTimeout(function(){
+                    parent.html(`<div class='products my-5' style='margin:auto; width:70px;'>Error ${ res.status }!</div>`);
+                }, 2000);
+            },
+        });
+    });
+
+    $(".wishlist").on('click', function(){
+        var wishlistitem = $(this);
+        var product = $(this).parent().parent().parent();
+        var wishlistcount = $("#wishlistcount");
+        var wishlistitemid = $(this).parent().parent().children().first().html();
+        $.ajax({
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                choice: 'wishlist',
+                wishlistitemid: wishlistitemid,
+            },
+            beforeSend: function(){
+                wishlistitem.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data){
+                product.remove();
+                wishlistcount.html(data["wishlistcount"]);
+            },
+        });
+    });
+</script>
 {% endblock %}

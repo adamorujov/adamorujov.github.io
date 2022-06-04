@@ -22,4 +22,7 @@ class CustomerAdmin(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('-id',)
 
-admin.site.register(Message)
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'name', 'email', 'phone_number')
+

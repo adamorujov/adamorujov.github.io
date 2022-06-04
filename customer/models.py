@@ -90,4 +90,4 @@ class Message(models.Model):
         ordering = ["-id"]
 
     def __str__(self):
-        return self.message[:15] + " (" + self.name + ")"
+        return self.message[:25] + "..."
