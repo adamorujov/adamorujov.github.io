@@ -46,7 +46,7 @@ class LoginView(auth_views.LoginView):
                 login(request, user)
                 return redirect("index")
             else:
-                messages.info(request, "Please, enter correct username and password.")
+                messages.info(request, "Please, enter correct email and password.")
                 return redirect("customer:login")
         messages.info(request, "Invalid username or password.")
         return redirect("customer:login")

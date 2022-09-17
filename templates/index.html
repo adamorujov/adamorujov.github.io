@@ -23,9 +23,9 @@
                 <ul class="menuLinks">
                     <li><a href="{% url 'index' %}">Home</a></li>
                     <li class="menuShopLi"><a>Shop</a>
-                        <ul class="menuShopUl">
+                        <ul class="menuShopUl" style="display:block;">
                             {% for shop in shops %}
-                            <li><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
+                            <li style=""><a href="{% url 'shop:products' %}?shop={{ shop.name }}">{{ shop.name }}</a></li>
                             {% empty %}
                             <li>No shop yet.</li>
                             {% endfor %}
@@ -324,7 +324,7 @@
                                     {% else %}
                                     <div class="addToCard">
                                             
-                                        <a href="{% url 'customer:login' %}" class="toCard modalShowerAddToCard">ADD TO CART</a>
+                                        <a href="{% url 'customer:login' %}" class="toCard ">ADD TO CART</a>
                                     </div>
                                     {% endif %}
                                 </div>
